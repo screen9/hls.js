@@ -12,7 +12,7 @@ import BufferController from  './controller/buffer-controller';
 import StreamController from  './controller/stream-controller';
 import LevelController from  './controller/level-controller';
 import TimelineController from './controller/timeline-controller';
-import AudioTrackController from './controller/audiotrack-controller';
+import AudioTrackController from './controller/audioTrack-controller';
 //import FPSController from './controller/fps-controller';
 import {logger, enableLogs} from './utils/logger';
 import XhrLoader from './utils/xhr-loader';
