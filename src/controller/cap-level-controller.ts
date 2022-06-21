@@ -214,17 +214,20 @@ class CapLevelController implements ComponentAPI {
   }
 
   get mediaWidth(): number {
-    return this.getDimensions().width * CapLevelController.contentScaleFactor;
+    return this.getDimensions().width * this.contentScaleFactor;
   }
 
   get mediaHeight(): number {
-    return this.getDimensions().height * CapLevelController.contentScaleFactor;
+    return this.getDimensions().height * this.contentScaleFactor;
   }
 
-  static get contentScaleFactor(): number {
+  get contentScaleFactor(): number {
     let pixelRatio = 1;
     try {
-      pixelRatio = self.devicePixelRatio;
+      pixelRatio = Math.max(
+        self.devicePixelRatio,
+        this.hls.config.minDevicePixelRatio
+      );
     } catch (e) {
       /* no-op */
     }
