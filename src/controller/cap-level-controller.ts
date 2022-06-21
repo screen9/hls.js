@@ -225,12 +225,14 @@ class CapLevelController implements ComponentAPI {
     let pixelRatio = 1;
     if (!this.hls.config.ignoreDevicePixelRatio) {
       try {
-        pixelRatio = self.devicePixelRatio;
+        pixelRatio = Math.max(
+          self.devicePixelRatio,
+          this.hls.config.minDevicePixelRatio
+        );
       } catch (e) {
         /* no-op */
       }
     }
-
     return pixelRatio;
   }
 

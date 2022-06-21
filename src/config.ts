@@ -171,6 +171,7 @@ export type HlsConfig = {
   enableSoftwareAES: boolean;
   minAutoBitrate: number;
   ignoreDevicePixelRatio: boolean;
+  minDevicePixelRatio: number;
   loader: { new (confg: HlsConfig): Loader<LoaderContext> };
   fetchSetup?: (context: LoaderContext, initParams: any) => Request;
   xhrSetup?: (xhr: XMLHttpRequest, url: string) => void;
@@ -220,6 +221,7 @@ export const hlsDefaultConfig: HlsConfig = {
   capLevelOnFPSDrop: false, // used by fps-controller
   capLevelToPlayerSize: false, // used by cap-level-controller
   ignoreDevicePixelRatio: false, // used by cap-level-controller
+  minDevicePixelRatio: 1,
   initialLiveManifestSize: 1, // used by stream-controller
   maxBufferLength: 30, // used by stream-controller
   backBufferLength: Infinity, // used by buffer-controller

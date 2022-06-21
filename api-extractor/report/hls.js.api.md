@@ -991,6 +991,7 @@ export type HlsConfig = {
     enableSoftwareAES: boolean;
     minAutoBitrate: number;
     ignoreDevicePixelRatio: boolean;
+    minDevicePixelRatio: number;
     loader: {
         new (confg: HlsConfig): Loader<LoaderContext>;
     };
