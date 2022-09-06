@@ -851,15 +851,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mergeConfig", function() { return mergeConfig; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "enableStreamingMode", function() { return enableStreamingMode; });
 /* harmony import */ var _controller_abr_controller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./controller/abr-controller */ "./src/controller/abr-controller.ts");
-/* harmony import */ var _controller_audio_stream_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./controller/audio-stream-controller */ "./src/empty.js");
-/* harmony import */ var _controller_audio_stream_controller__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_controller_audio_stream_controller__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _controller_buffer_controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./controller/buffer-controller */ "./src/controller/buffer-controller.ts");
-/* harmony import */ var _controller_cap_level_controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./controller/cap-level-controller */ "./src/controller/cap-level-controller.ts");
-/* harmony import */ var _controller_fps_controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./controller/fps-controller */ "./src/controller/fps-controller.ts");
-/* harmony import */ var _utils_xhr_loader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./utils/xhr-loader */ "./src/utils/xhr-loader.ts");
-/* harmony import */ var _utils_fetch_loader__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/fetch-loader */ "./src/utils/fetch-loader.ts");
-/* harmony import */ var _utils_mediakeys_helper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils/mediakeys-helper */ "./src/utils/mediakeys-helper.ts");
-/* harmony import */ var _utils_logger__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./utils/logger */ "./src/utils/logger.ts");
+/* harmony import */ var _controller_audio_stream_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./controller/audio-stream-controller */ "./src/controller/audio-stream-controller.ts");
+/* harmony import */ var _controller_audio_track_controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./controller/audio-track-controller */ "./src/controller/audio-track-controller.ts");
+/* harmony import */ var _controller_subtitle_stream_controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./controller/subtitle-stream-controller */ "./src/empty.js");
+/* harmony import */ var _controller_subtitle_stream_controller__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_controller_subtitle_stream_controller__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _controller_buffer_controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./controller/buffer-controller */ "./src/controller/buffer-controller.ts");
+/* harmony import */ var _controller_cap_level_controller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./controller/cap-level-controller */ "./src/controller/cap-level-controller.ts");
+/* harmony import */ var _controller_fps_controller__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./controller/fps-controller */ "./src/controller/fps-controller.ts");
+/* harmony import */ var _utils_xhr_loader__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils/xhr-loader */ "./src/utils/xhr-loader.ts");
+/* harmony import */ var _utils_fetch_loader__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./utils/fetch-loader */ "./src/utils/fetch-loader.ts");
+/* harmony import */ var _utils_mediakeys_helper__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utils/mediakeys-helper */ "./src/utils/mediakeys-helper.ts");
+/* harmony import */ var _utils_logger__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./utils/logger */ "./src/utils/logger.ts");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
@@ -973,7 +975,7 @@ var hlsDefaultConfig = _objectSpread(_objectSpread({
   // used by fps-controller
   appendErrorMaxRetry: 3,
   // used by buffer-controller
-  loader: _utils_xhr_loader__WEBPACK_IMPORTED_MODULE_5__["default"],
+  loader: _utils_xhr_loader__WEBPACK_IMPORTED_MODULE_7__["default"],
   // loader: FetchLoader,
   fLoader: undefined,
   // used by fragment-loader
@@ -986,9 +988,9 @@ var hlsDefaultConfig = _objectSpread(_objectSpread({
   licenseResponseCallback: undefined,
   // used by eme-controller
   abrController: _controller_abr_controller__WEBPACK_IMPORTED_MODULE_0__["default"],
-  bufferController: _controller_buffer_controller__WEBPACK_IMPORTED_MODULE_2__["default"],
-  capLevelController: _controller_cap_level_controller__WEBPACK_IMPORTED_MODULE_3__["default"],
-  fpsController: _controller_fps_controller__WEBPACK_IMPORTED_MODULE_4__["default"],
+  bufferController: _controller_buffer_controller__WEBPACK_IMPORTED_MODULE_4__["default"],
+  capLevelController: _controller_cap_level_controller__WEBPACK_IMPORTED_MODULE_5__["default"],
+  fpsController: _controller_fps_controller__WEBPACK_IMPORTED_MODULE_6__["default"],
   stretchShortVideoTrack: false,
   // used by mp4-remuxer
   maxAudioFramesDrift: 1,
@@ -1023,7 +1025,7 @@ var hlsDefaultConfig = _objectSpread(_objectSpread({
   // used by eme-controller
   drmSystemOptions: {},
   // used by eme-controller
-  requestMediaKeySystemAccessFunc: _utils_mediakeys_helper__WEBPACK_IMPORTED_MODULE_7__["requestMediaKeySystemAccess"],
+  requestMediaKeySystemAccessFunc: _utils_mediakeys_helper__WEBPACK_IMPORTED_MODULE_9__["requestMediaKeySystemAccess"],
   // used by eme-controller
   testBandwidth: true,
   progressive: false,
@@ -1033,15 +1035,15 @@ var hlsDefaultConfig = _objectSpread(_objectSpread({
   subtitleStreamController:  false ? undefined : undefined,
   subtitleTrackController:  false ? undefined : undefined,
   timelineController:  false ? undefined : undefined,
-  audioStreamController:  false ? undefined : undefined,
-  audioTrackController:  false ? undefined : undefined,
+  audioStreamController:  true ? _controller_audio_stream_controller__WEBPACK_IMPORTED_MODULE_1__["default"] : undefined,
+  audioTrackController:  true ? _controller_audio_track_controller__WEBPACK_IMPORTED_MODULE_2__["default"] : undefined,
   emeController:  false ? undefined : undefined,
   cmcdController:  false ? undefined : undefined
 });
 
 function timelineConfig() {
   return {
-    cueHandler: _controller_audio_stream_controller__WEBPACK_IMPORTED_MODULE_1___default.a,
+    cueHandler: _controller_subtitle_stream_controller__WEBPACK_IMPORTED_MODULE_3___default.a,
     // used by timeline-controller
     enableCEA708Captions: false,
     // used by timeline-controller
@@ -1087,18 +1089,18 @@ function mergeConfig(defaultConfig, userConfig) {
 function enableStreamingMode(config) {
   var currentLoader = config.loader;
 
-  if (currentLoader !== _utils_fetch_loader__WEBPACK_IMPORTED_MODULE_6__["default"] && currentLoader !== _utils_xhr_loader__WEBPACK_IMPORTED_MODULE_5__["default"]) {
+  if (currentLoader !== _utils_fetch_loader__WEBPACK_IMPORTED_MODULE_8__["default"] && currentLoader !== _utils_xhr_loader__WEBPACK_IMPORTED_MODULE_7__["default"]) {
     // If a developer has configured their own loader, respect that choice
-    _utils_logger__WEBPACK_IMPORTED_MODULE_8__["logger"].log('[config]: Custom loader detected, cannot enable progressive streaming');
+    _utils_logger__WEBPACK_IMPORTED_MODULE_10__["logger"].log('[config]: Custom loader detected, cannot enable progressive streaming');
     config.progressive = false;
   } else {
-    var canStreamProgressively = Object(_utils_fetch_loader__WEBPACK_IMPORTED_MODULE_6__["fetchSupported"])();
+    var canStreamProgressively = Object(_utils_fetch_loader__WEBPACK_IMPORTED_MODULE_8__["fetchSupported"])();
 
     if (canStreamProgressively) {
-      config.loader = _utils_fetch_loader__WEBPACK_IMPORTED_MODULE_6__["default"];
+      config.loader = _utils_fetch_loader__WEBPACK_IMPORTED_MODULE_8__["default"];
       config.progressive = true;
       config.enableSoftwareAES = true;
-      _utils_logger__WEBPACK_IMPORTED_MODULE_8__["logger"].log('[config]: Progressive streaming enabled, using FetchLoader');
+      _utils_logger__WEBPACK_IMPORTED_MODULE_10__["logger"].log('[config]: Progressive streaming enabled, using FetchLoader');
     }
   }
 }
@@ -1515,6 +1517,1112 @@ var AbrController = /*#__PURE__*/function () {
 }();
 
 /* harmony default export */ __webpack_exports__["default"] = (AbrController);
+
+/***/ }),
+
+/***/ "./src/controller/audio-stream-controller.ts":
+/*!***************************************************!*\
+  !*** ./src/controller/audio-stream-controller.ts ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _home_grbla_screen9_git_outside_hls_js_screen9_hls_js_src_polyfills_number__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/polyfills/number */ "./src/polyfills/number.ts");
+/* harmony import */ var _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./base-stream-controller */ "./src/controller/base-stream-controller.ts");
+/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../events */ "./src/events.ts");
+/* harmony import */ var _utils_buffer_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/buffer-helper */ "./src/utils/buffer-helper.ts");
+/* harmony import */ var _fragment_tracker__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./fragment-tracker */ "./src/controller/fragment-tracker.ts");
+/* harmony import */ var _types_level__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../types/level */ "./src/types/level.ts");
+/* harmony import */ var _types_loader__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../types/loader */ "./src/types/loader.ts");
+/* harmony import */ var _loader_fragment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../loader/fragment */ "./src/loader/fragment.ts");
+/* harmony import */ var _demux_chunk_cache__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../demux/chunk-cache */ "./src/demux/chunk-cache.ts");
+/* harmony import */ var _demux_transmuxer_interface__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../demux/transmuxer-interface */ "./src/demux/transmuxer-interface.ts");
+/* harmony import */ var _types_transmuxer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../types/transmuxer */ "./src/types/transmuxer.ts");
+/* harmony import */ var _fragment_finders__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./fragment-finders */ "./src/controller/fragment-finders.ts");
+/* harmony import */ var _utils_discontinuities__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../utils/discontinuities */ "./src/utils/discontinuities.ts");
+/* harmony import */ var _errors__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../errors */ "./src/errors.ts");
+/* harmony import */ var _utils_logger__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../utils/logger */ "./src/utils/logger.ts");
+
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var TICK_INTERVAL = 100; // how often to tick in ms
+
+var AudioStreamController = /*#__PURE__*/function (_BaseStreamController) {
+  _inheritsLoose(AudioStreamController, _BaseStreamController);
+
+  function AudioStreamController(hls, fragmentTracker) {
+    var _this;
+
+    _this = _BaseStreamController.call(this, hls, fragmentTracker, '[audio-stream-controller]') || this;
+    _this.videoBuffer = null;
+    _this.videoTrackCC = -1;
+    _this.waitingVideoCC = -1;
+    _this.audioSwitch = false;
+    _this.trackId = -1;
+    _this.waitingData = null;
+    _this.mainDetails = null;
+    _this.bufferFlushed = false;
+
+    _this._registerListeners();
+
+    return _this;
+  }
+
+  var _proto = AudioStreamController.prototype;
+
+  _proto.onHandlerDestroying = function onHandlerDestroying() {
+    this._unregisterListeners();
+
+    this.mainDetails = null;
+  };
+
+  _proto._registerListeners = function _registerListeners() {
+    var hls = this.hls;
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].MEDIA_ATTACHED, this.onMediaAttached, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].MEDIA_DETACHING, this.onMediaDetaching, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].MANIFEST_LOADING, this.onManifestLoading, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].LEVEL_LOADED, this.onLevelLoaded, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].AUDIO_TRACKS_UPDATED, this.onAudioTracksUpdated, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].AUDIO_TRACK_SWITCHING, this.onAudioTrackSwitching, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].AUDIO_TRACK_LOADED, this.onAudioTrackLoaded, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].ERROR, this.onError, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].BUFFER_RESET, this.onBufferReset, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].BUFFER_CREATED, this.onBufferCreated, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].BUFFER_FLUSHED, this.onBufferFlushed, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].INIT_PTS_FOUND, this.onInitPtsFound, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].FRAG_BUFFERED, this.onFragBuffered, this);
+  };
+
+  _proto._unregisterListeners = function _unregisterListeners() {
+    var hls = this.hls;
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].MEDIA_ATTACHED, this.onMediaAttached, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].MEDIA_DETACHING, this.onMediaDetaching, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].MANIFEST_LOADING, this.onManifestLoading, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].LEVEL_LOADED, this.onLevelLoaded, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].AUDIO_TRACKS_UPDATED, this.onAudioTracksUpdated, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].AUDIO_TRACK_SWITCHING, this.onAudioTrackSwitching, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].AUDIO_TRACK_LOADED, this.onAudioTrackLoaded, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].ERROR, this.onError, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].BUFFER_RESET, this.onBufferReset, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].BUFFER_CREATED, this.onBufferCreated, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].BUFFER_FLUSHED, this.onBufferFlushed, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].INIT_PTS_FOUND, this.onInitPtsFound, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].FRAG_BUFFERED, this.onFragBuffered, this);
+  } // INIT_PTS_FOUND is triggered when the video track parsed in the stream-controller has a new PTS value
+  ;
+
+  _proto.onInitPtsFound = function onInitPtsFound(event, _ref) {
+    var frag = _ref.frag,
+        id = _ref.id,
+        initPTS = _ref.initPTS;
+
+    // Always update the new INIT PTS
+    // Can change due level switch
+    if (id === 'main') {
+      var cc = frag.cc;
+      this.initPTS[frag.cc] = initPTS;
+      this.log("InitPTS for cc: " + cc + " found from main: " + initPTS);
+      this.videoTrackCC = cc; // If we are waiting, tick immediately to unblock audio fragment transmuxing
+
+      if (this.state === _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].WAITING_INIT_PTS) {
+        this.tick();
+      }
+    }
+  };
+
+  _proto.startLoad = function startLoad(startPosition) {
+    if (!this.levels) {
+      this.startPosition = startPosition;
+      this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].STOPPED;
+      return;
+    }
+
+    var lastCurrentTime = this.lastCurrentTime;
+    this.stopLoad();
+    this.setInterval(TICK_INTERVAL);
+    this.fragLoadError = 0;
+
+    if (lastCurrentTime > 0 && startPosition === -1) {
+      this.log("Override startPosition with lastCurrentTime @" + lastCurrentTime.toFixed(3));
+      this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].IDLE;
+    } else {
+      this.loadedmetadata = false;
+      this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].WAITING_TRACK;
+    }
+
+    this.nextLoadPosition = this.startPosition = this.lastCurrentTime = startPosition;
+    this.tick();
+  };
+
+  _proto.doTick = function doTick() {
+    switch (this.state) {
+      case _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].IDLE:
+        this.doTickIdle();
+        break;
+
+      case _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].WAITING_TRACK:
+        {
+          var _levels$trackId;
+
+          var levels = this.levels,
+              trackId = this.trackId;
+          var details = levels === null || levels === void 0 ? void 0 : (_levels$trackId = levels[trackId]) === null || _levels$trackId === void 0 ? void 0 : _levels$trackId.details;
+
+          if (details) {
+            if (this.waitForCdnTuneIn(details)) {
+              break;
+            }
+
+            this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].WAITING_INIT_PTS;
+          }
+
+          break;
+        }
+
+      case _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].FRAG_LOADING_WAITING_RETRY:
+        {
+          var _this$media;
+
+          var now = performance.now();
+          var retryDate = this.retryDate; // if current time is gt than retryDate, or if media seeking let's switch to IDLE state to retry loading
+
+          if (!retryDate || now >= retryDate || (_this$media = this.media) !== null && _this$media !== void 0 && _this$media.seeking) {
+            this.log('RetryDate reached, switch back to IDLE state');
+            this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].IDLE;
+          }
+
+          break;
+        }
+
+      case _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].WAITING_INIT_PTS:
+        {
+          // Ensure we don't get stuck in the WAITING_INIT_PTS state if the waiting frag CC doesn't match any initPTS
+          var waitingData = this.waitingData;
+
+          if (waitingData) {
+            var frag = waitingData.frag,
+                part = waitingData.part,
+                cache = waitingData.cache,
+                complete = waitingData.complete;
+
+            if (this.initPTS[frag.cc] !== undefined) {
+              this.waitingData = null;
+              this.waitingVideoCC = -1;
+              this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].FRAG_LOADING;
+              var payload = cache.flush();
+              var data = {
+                frag: frag,
+                part: part,
+                payload: payload,
+                networkDetails: null
+              };
+
+              this._handleFragmentLoadProgress(data);
+
+              if (complete) {
+                _BaseStreamController.prototype._handleFragmentLoadComplete.call(this, data);
+              }
+            } else if (this.videoTrackCC !== this.waitingVideoCC) {
+              // Drop waiting fragment if videoTrackCC has changed since waitingFragment was set and initPTS was not found
+              _utils_logger__WEBPACK_IMPORTED_MODULE_14__["logger"].log("Waiting fragment cc (" + frag.cc + ") cancelled because video is at cc " + this.videoTrackCC);
+              this.clearWaitingFragment();
+            } else {
+              // Drop waiting fragment if an earlier fragment is needed
+              var pos = this.getLoadPosition();
+              var bufferInfo = _utils_buffer_helper__WEBPACK_IMPORTED_MODULE_3__["BufferHelper"].bufferInfo(this.mediaBuffer, pos, this.config.maxBufferHole);
+              var waitingFragmentAtPosition = Object(_fragment_finders__WEBPACK_IMPORTED_MODULE_11__["fragmentWithinToleranceTest"])(bufferInfo.end, this.config.maxFragLookUpTolerance, frag);
+
+              if (waitingFragmentAtPosition < 0) {
+                _utils_logger__WEBPACK_IMPORTED_MODULE_14__["logger"].log("Waiting fragment cc (" + frag.cc + ") @ " + frag.start + " cancelled because another fragment at " + bufferInfo.end + " is needed");
+                this.clearWaitingFragment();
+              }
+            }
+          } else {
+            this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].IDLE;
+          }
+        }
+    }
+
+    this.onTickEnd();
+  };
+
+  _proto.clearWaitingFragment = function clearWaitingFragment() {
+    var waitingData = this.waitingData;
+
+    if (waitingData) {
+      this.fragmentTracker.removeFragment(waitingData.frag);
+      this.waitingData = null;
+      this.waitingVideoCC = -1;
+      this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].IDLE;
+    }
+  };
+
+  _proto.onTickEnd = function onTickEnd() {
+    var media = this.media;
+
+    if (!media || !media.readyState) {
+      // Exit early if we don't have media or if the media hasn't buffered anything yet (readyState 0)
+      return;
+    }
+
+    var mediaBuffer = this.mediaBuffer ? this.mediaBuffer : media;
+    var buffered = mediaBuffer.buffered;
+
+    if (!this.loadedmetadata && buffered.length) {
+      this.loadedmetadata = true;
+    }
+
+    this.lastCurrentTime = media.currentTime;
+  };
+
+  _proto.doTickIdle = function doTickIdle() {
+    var _frag$decryptdata, _frag$decryptdata2;
+
+    var hls = this.hls,
+        levels = this.levels,
+        media = this.media,
+        trackId = this.trackId;
+    var config = hls.config;
+
+    if (!levels || !levels[trackId]) {
+      return;
+    } // if video not attached AND
+    // start fragment already requested OR start frag prefetch not enabled
+    // exit loop
+    // => if media not attached but start frag prefetch is enabled and start frag not requested yet, we will not exit loop
+
+
+    if (!media && (this.startFragRequested || !config.startFragPrefetch)) {
+      return;
+    }
+
+    var levelInfo = levels[trackId];
+    var trackDetails = levelInfo.details;
+
+    if (!trackDetails || trackDetails.live && this.levelLastLoaded !== trackId || this.waitForCdnTuneIn(trackDetails)) {
+      this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].WAITING_TRACK;
+      return;
+    }
+
+    if (this.bufferFlushed) {
+      this.bufferFlushed = false;
+      this.afterBufferFlushed(this.mediaBuffer ? this.mediaBuffer : this.media, _loader_fragment__WEBPACK_IMPORTED_MODULE_7__["ElementaryStreamTypes"].AUDIO, _types_loader__WEBPACK_IMPORTED_MODULE_6__["PlaylistLevelType"].AUDIO);
+    }
+
+    var bufferInfo = this.getFwdBufferInfo(this.mediaBuffer ? this.mediaBuffer : this.media, _types_loader__WEBPACK_IMPORTED_MODULE_6__["PlaylistLevelType"].AUDIO);
+
+    if (bufferInfo === null) {
+      return;
+    }
+
+    var bufferLen = bufferInfo.len;
+    var maxBufLen = this.getMaxBufferLength();
+    var audioSwitch = this.audioSwitch; // if buffer length is less than maxBufLen try to load a new fragment
+
+    if (bufferLen >= maxBufLen && !audioSwitch) {
+      return;
+    }
+
+    if (!audioSwitch && this._streamEnded(bufferInfo, trackDetails)) {
+      hls.trigger(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].BUFFER_EOS, {
+        type: 'audio'
+      });
+      this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].ENDED;
+      return;
+    }
+
+    var fragments = trackDetails.fragments;
+    var start = fragments[0].start;
+    var targetBufferTime = bufferInfo.end;
+
+    if (audioSwitch) {
+      var pos = this.getLoadPosition();
+      targetBufferTime = pos; // if currentTime (pos) is less than alt audio playlist start time, it means that alt audio is ahead of currentTime
+
+      if (trackDetails.PTSKnown && pos < start) {
+        // if everything is buffered from pos to start or if audio buffer upfront, let's seek to start
+        if (bufferInfo.end > start || bufferInfo.nextStart) {
+          this.log('Alt audio track ahead of main track, seek to start of alt audio track');
+          media.currentTime = start + 0.05;
+        }
+      }
+    }
+
+    var frag = this.getNextFragment(targetBufferTime, trackDetails);
+
+    if (!frag) {
+      this.bufferFlushed = true;
+      return;
+    }
+
+    if (((_frag$decryptdata = frag.decryptdata) === null || _frag$decryptdata === void 0 ? void 0 : _frag$decryptdata.keyFormat) === 'identity' && !((_frag$decryptdata2 = frag.decryptdata) !== null && _frag$decryptdata2 !== void 0 && _frag$decryptdata2.key)) {
+      this.loadKey(frag, trackDetails);
+    } else {
+      this.loadFragment(frag, trackDetails, targetBufferTime);
+    }
+  };
+
+  _proto.getMaxBufferLength = function getMaxBufferLength() {
+    var maxConfigBuffer = _BaseStreamController.prototype.getMaxBufferLength.call(this);
+
+    var mainBufferInfo = this.getFwdBufferInfo(this.videoBuffer ? this.videoBuffer : this.media, _types_loader__WEBPACK_IMPORTED_MODULE_6__["PlaylistLevelType"].MAIN);
+
+    if (mainBufferInfo === null) {
+      return maxConfigBuffer;
+    }
+
+    return Math.max(maxConfigBuffer, mainBufferInfo.len);
+  };
+
+  _proto.onMediaDetaching = function onMediaDetaching() {
+    this.videoBuffer = null;
+
+    _BaseStreamController.prototype.onMediaDetaching.call(this);
+  };
+
+  _proto.onAudioTracksUpdated = function onAudioTracksUpdated(event, _ref2) {
+    var audioTracks = _ref2.audioTracks;
+    this.resetTransmuxer();
+    this.levels = audioTracks.map(function (mediaPlaylist) {
+      return new _types_level__WEBPACK_IMPORTED_MODULE_5__["Level"](mediaPlaylist);
+    });
+  };
+
+  _proto.onAudioTrackSwitching = function onAudioTrackSwitching(event, data) {
+    // if any URL found on new audio track, it is an alternate audio track
+    var altAudio = !!data.url;
+    this.trackId = data.id;
+    var fragCurrent = this.fragCurrent;
+
+    if (fragCurrent !== null && fragCurrent !== void 0 && fragCurrent.loader) {
+      fragCurrent.loader.abort();
+    }
+
+    this.fragCurrent = null;
+    this.clearWaitingFragment(); // destroy useless transmuxer when switching audio to main
+
+    if (!altAudio) {
+      this.resetTransmuxer();
+    } else {
+      // switching to audio track, start timer if not already started
+      this.setInterval(TICK_INTERVAL);
+    } // should we switch tracks ?
+
+
+    if (altAudio) {
+      this.audioSwitch = true; // main audio track are handled by stream-controller, just do something if switching to alt audio track
+
+      this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].IDLE;
+    } else {
+      this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].STOPPED;
+    }
+
+    this.tick();
+  };
+
+  _proto.onManifestLoading = function onManifestLoading() {
+    this.mainDetails = null;
+    this.fragmentTracker.removeAllFragments();
+    this.startPosition = this.lastCurrentTime = 0;
+    this.bufferFlushed = false;
+  };
+
+  _proto.onLevelLoaded = function onLevelLoaded(event, data) {
+    this.mainDetails = data.details;
+  };
+
+  _proto.onAudioTrackLoaded = function onAudioTrackLoaded(event, data) {
+    var _track$details;
+
+    var levels = this.levels;
+    var newDetails = data.details,
+        trackId = data.id;
+
+    if (!levels) {
+      this.warn("Audio tracks were reset while loading level " + trackId);
+      return;
+    }
+
+    this.log("Track " + trackId + " loaded [" + newDetails.startSN + "," + newDetails.endSN + "],duration:" + newDetails.totalduration);
+    var track = levels[trackId];
+    var sliding = 0;
+
+    if (newDetails.live || (_track$details = track.details) !== null && _track$details !== void 0 && _track$details.live) {
+      var mainDetails = this.mainDetails;
+
+      if (!newDetails.fragments[0]) {
+        newDetails.deltaUpdateFailed = true;
+      }
+
+      if (newDetails.deltaUpdateFailed || !mainDetails) {
+        return;
+      }
+
+      if (!track.details && newDetails.hasProgramDateTime && mainDetails.hasProgramDateTime) {
+        // Make sure our audio rendition is aligned with the "main" rendition, using
+        // pdt as our reference times.
+        Object(_utils_discontinuities__WEBPACK_IMPORTED_MODULE_12__["alignMediaPlaylistByPDT"])(newDetails, mainDetails);
+        sliding = newDetails.fragments[0].start;
+      } else {
+        sliding = this.alignPlaylists(newDetails, track.details);
+      }
+    }
+
+    track.details = newDetails;
+    this.levelLastLoaded = trackId; // compute start position if we are aligned with the main playlist
+
+    if (!this.startFragRequested && (this.mainDetails || !newDetails.live)) {
+      this.setStartPosition(track.details, sliding);
+    } // only switch back to IDLE state if we were waiting for track to start downloading a new fragment
+
+
+    if (this.state === _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].WAITING_TRACK && !this.waitForCdnTuneIn(newDetails)) {
+      this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].IDLE;
+    } // trigger handler right now
+
+
+    this.tick();
+  };
+
+  _proto._handleFragmentLoadProgress = function _handleFragmentLoadProgress(data) {
+    var _frag$initSegment;
+
+    var frag = data.frag,
+        part = data.part,
+        payload = data.payload;
+    var config = this.config,
+        trackId = this.trackId,
+        levels = this.levels;
+
+    if (!levels) {
+      this.warn("Audio tracks were reset while fragment load was in progress. Fragment " + frag.sn + " of level " + frag.level + " will not be buffered");
+      return;
+    }
+
+    var track = levels[trackId];
+    console.assert(track, 'Audio track is defined on fragment load progress');
+    var details = track.details;
+    console.assert(details, 'Audio track details are defined on fragment load progress');
+    var audioCodec = config.defaultAudioCodec || track.audioCodec || 'mp4a.40.2';
+    var transmuxer = this.transmuxer;
+
+    if (!transmuxer) {
+      transmuxer = this.transmuxer = new _demux_transmuxer_interface__WEBPACK_IMPORTED_MODULE_9__["default"](this.hls, _types_loader__WEBPACK_IMPORTED_MODULE_6__["PlaylistLevelType"].AUDIO, this._handleTransmuxComplete.bind(this), this._handleTransmuxerFlush.bind(this));
+    } // Check if we have video initPTS
+    // If not we need to wait for it
+
+
+    var initPTS = this.initPTS[frag.cc];
+    var initSegmentData = (_frag$initSegment = frag.initSegment) === null || _frag$initSegment === void 0 ? void 0 : _frag$initSegment.data;
+
+    if (initPTS !== undefined) {
+      // this.log(`Transmuxing ${sn} of [${details.startSN} ,${details.endSN}],track ${trackId}`);
+      // time Offset is accurate if level PTS is known, or if playlist is not sliding (not live)
+      var accurateTimeOffset = false; // details.PTSKnown || !details.live;
+
+      var partIndex = part ? part.index : -1;
+      var partial = partIndex !== -1;
+      var chunkMeta = new _types_transmuxer__WEBPACK_IMPORTED_MODULE_10__["ChunkMetadata"](frag.level, frag.sn, frag.stats.chunkCount, payload.byteLength, partIndex, partial);
+      transmuxer.push(payload, initSegmentData, audioCodec, '', frag, part, details.totalduration, accurateTimeOffset, chunkMeta, initPTS);
+    } else {
+      _utils_logger__WEBPACK_IMPORTED_MODULE_14__["logger"].log("Unknown video PTS for cc " + frag.cc + ", waiting for video PTS before demuxing audio frag " + frag.sn + " of [" + details.startSN + " ," + details.endSN + "],track " + trackId);
+
+      var _this$waitingData = this.waitingData = this.waitingData || {
+        frag: frag,
+        part: part,
+        cache: new _demux_chunk_cache__WEBPACK_IMPORTED_MODULE_8__["default"](),
+        complete: false
+      },
+          cache = _this$waitingData.cache;
+
+      cache.push(new Uint8Array(payload));
+      this.waitingVideoCC = this.videoTrackCC;
+      this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].WAITING_INIT_PTS;
+    }
+  };
+
+  _proto._handleFragmentLoadComplete = function _handleFragmentLoadComplete(fragLoadedData) {
+    if (this.waitingData) {
+      this.waitingData.complete = true;
+      return;
+    }
+
+    _BaseStreamController.prototype._handleFragmentLoadComplete.call(this, fragLoadedData);
+  };
+
+  _proto.onBufferReset = function
+    /* event: Events.BUFFER_RESET */
+  onBufferReset() {
+    // reset reference to sourcebuffers
+    this.mediaBuffer = this.videoBuffer = null;
+    this.loadedmetadata = false;
+  };
+
+  _proto.onBufferCreated = function onBufferCreated(event, data) {
+    var audioTrack = data.tracks.audio;
+
+    if (audioTrack) {
+      this.mediaBuffer = audioTrack.buffer;
+    }
+
+    if (data.tracks.video) {
+      this.videoBuffer = data.tracks.video.buffer;
+    }
+  };
+
+  _proto.onFragBuffered = function onFragBuffered(event, data) {
+    var frag = data.frag,
+        part = data.part;
+
+    if (frag.type !== _types_loader__WEBPACK_IMPORTED_MODULE_6__["PlaylistLevelType"].AUDIO) {
+      return;
+    }
+
+    if (this.fragContextChanged(frag)) {
+      // If a level switch was requested while a fragment was buffering, it will emit the FRAG_BUFFERED event upon completion
+      // Avoid setting state back to IDLE or concluding the audio switch; otherwise, the switched-to track will not buffer
+      this.warn("Fragment " + frag.sn + (part ? ' p: ' + part.index : '') + " of level " + frag.level + " finished buffering, but was aborted. state: " + this.state + ", audioSwitch: " + this.audioSwitch);
+      return;
+    }
+
+    if (frag.sn !== 'initSegment') {
+      this.fragPrevious = frag;
+
+      if (this.audioSwitch) {
+        this.audioSwitch = false;
+        this.hls.trigger(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].AUDIO_TRACK_SWITCHED, {
+          id: this.trackId
+        });
+      }
+    }
+
+    this.fragBufferedComplete(frag, part);
+  };
+
+  _proto.onError = function onError(event, data) {
+    switch (data.details) {
+      case _errors__WEBPACK_IMPORTED_MODULE_13__["ErrorDetails"].FRAG_LOAD_ERROR:
+      case _errors__WEBPACK_IMPORTED_MODULE_13__["ErrorDetails"].FRAG_LOAD_TIMEOUT:
+      case _errors__WEBPACK_IMPORTED_MODULE_13__["ErrorDetails"].KEY_LOAD_ERROR:
+      case _errors__WEBPACK_IMPORTED_MODULE_13__["ErrorDetails"].KEY_LOAD_TIMEOUT:
+        // TODO: Skip fragments that do not belong to this.fragCurrent audio-group id
+        this.onFragmentOrKeyLoadError(_types_loader__WEBPACK_IMPORTED_MODULE_6__["PlaylistLevelType"].AUDIO, data);
+        break;
+
+      case _errors__WEBPACK_IMPORTED_MODULE_13__["ErrorDetails"].AUDIO_TRACK_LOAD_ERROR:
+      case _errors__WEBPACK_IMPORTED_MODULE_13__["ErrorDetails"].AUDIO_TRACK_LOAD_TIMEOUT:
+        //  when in ERROR state, don't switch back to IDLE state in case a non-fatal error is received
+        if (this.state !== _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].ERROR && this.state !== _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].STOPPED) {
+          // if fatal error, stop processing, otherwise move to IDLE to retry loading
+          this.state = data.fatal ? _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].ERROR : _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].IDLE;
+          this.warn(data.details + " while loading frag, switching to " + this.state + " state");
+        }
+
+        break;
+
+      case _errors__WEBPACK_IMPORTED_MODULE_13__["ErrorDetails"].BUFFER_FULL_ERROR:
+        // if in appending state
+        if (data.parent === 'audio' && (this.state === _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].PARSING || this.state === _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].PARSED)) {
+          var flushBuffer = true;
+          var bufferedInfo = this.getFwdBufferInfo(this.mediaBuffer, _types_loader__WEBPACK_IMPORTED_MODULE_6__["PlaylistLevelType"].AUDIO); // 0.5 : tolerance needed as some browsers stalls playback before reaching buffered end
+          // reduce max buf len if current position is buffered
+
+          if (bufferedInfo && bufferedInfo.len > 0.5) {
+            flushBuffer = !this.reduceMaxBufferLength(bufferedInfo.len);
+          }
+
+          if (flushBuffer) {
+            // current position is not buffered, but browser is still complaining about buffer full error
+            // this happens on IE/Edge, refer to https://github.com/video-dev/hls.js/pull/708
+            // in that case flush the whole audio buffer to recover
+            this.warn('Buffer full error also media.currentTime is not buffered, flush audio buffer');
+            this.fragCurrent = null;
+
+            _BaseStreamController.prototype.flushMainBuffer.call(this, 0, Number.POSITIVE_INFINITY, 'audio');
+          }
+
+          this.resetLoadingState();
+        }
+
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  _proto.onBufferFlushed = function onBufferFlushed(event, _ref3) {
+    var type = _ref3.type;
+
+    if (type === _loader_fragment__WEBPACK_IMPORTED_MODULE_7__["ElementaryStreamTypes"].AUDIO) {
+      this.bufferFlushed = true;
+    }
+  };
+
+  _proto._handleTransmuxComplete = function _handleTransmuxComplete(transmuxResult) {
+    var _id3$samples;
+
+    var id = 'audio';
+    var hls = this.hls;
+    var remuxResult = transmuxResult.remuxResult,
+        chunkMeta = transmuxResult.chunkMeta;
+    var context = this.getCurrentContext(chunkMeta);
+
+    if (!context) {
+      this.warn("The loading context changed while buffering fragment " + chunkMeta.sn + " of level " + chunkMeta.level + ". This chunk will not be buffered.");
+      this.resetLiveStartWhenNotLoaded(chunkMeta.level);
+      return;
+    }
+
+    var frag = context.frag,
+        part = context.part;
+    var audio = remuxResult.audio,
+        text = remuxResult.text,
+        id3 = remuxResult.id3,
+        initSegment = remuxResult.initSegment; // Check if the current fragment has been aborted. We check this by first seeing if we're still playing the current level.
+    // If we are, subsequently check if the currently loading fragment (fragCurrent) has changed.
+
+    if (this.fragContextChanged(frag)) {
+      return;
+    }
+
+    this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].PARSING;
+
+    if (this.audioSwitch && audio) {
+      this.completeAudioSwitch();
+    }
+
+    if (initSegment !== null && initSegment !== void 0 && initSegment.tracks) {
+      this._bufferInitSegment(initSegment.tracks, frag, chunkMeta);
+
+      hls.trigger(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].FRAG_PARSING_INIT_SEGMENT, {
+        frag: frag,
+        id: id,
+        tracks: initSegment.tracks
+      }); // Only flush audio from old audio tracks when PTS is known on new audio track
+    }
+
+    if (audio) {
+      var startPTS = audio.startPTS,
+          endPTS = audio.endPTS,
+          startDTS = audio.startDTS,
+          endDTS = audio.endDTS;
+
+      if (part) {
+        part.elementaryStreams[_loader_fragment__WEBPACK_IMPORTED_MODULE_7__["ElementaryStreamTypes"].AUDIO] = {
+          startPTS: startPTS,
+          endPTS: endPTS,
+          startDTS: startDTS,
+          endDTS: endDTS
+        };
+      }
+
+      frag.setElementaryStreamInfo(_loader_fragment__WEBPACK_IMPORTED_MODULE_7__["ElementaryStreamTypes"].AUDIO, startPTS, endPTS, startDTS, endDTS);
+      this.bufferFragmentData(audio, frag, part, chunkMeta);
+    }
+
+    if (id3 !== null && id3 !== void 0 && (_id3$samples = id3.samples) !== null && _id3$samples !== void 0 && _id3$samples.length) {
+      var emittedID3 = _extends({
+        frag: frag,
+        id: id
+      }, id3);
+
+      hls.trigger(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].FRAG_PARSING_METADATA, emittedID3);
+    }
+
+    if (text) {
+      var emittedText = _extends({
+        frag: frag,
+        id: id
+      }, text);
+
+      hls.trigger(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].FRAG_PARSING_USERDATA, emittedText);
+    }
+  };
+
+  _proto._bufferInitSegment = function _bufferInitSegment(tracks, frag, chunkMeta) {
+    if (this.state !== _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].PARSING) {
+      return;
+    } // delete any video track found on audio transmuxer
+
+
+    if (tracks.video) {
+      delete tracks.video;
+    } // include levelCodec in audio and video tracks
+
+
+    var track = tracks.audio;
+
+    if (!track) {
+      return;
+    }
+
+    track.levelCodec = track.codec;
+    track.id = 'audio';
+    this.log("Init audio buffer, container:" + track.container + ", codecs[parsed]=[" + track.codec + "]");
+    this.hls.trigger(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].BUFFER_CODECS, tracks);
+    var initSegment = track.initSegment;
+
+    if (initSegment !== null && initSegment !== void 0 && initSegment.byteLength) {
+      var segment = {
+        type: 'audio',
+        frag: frag,
+        part: null,
+        chunkMeta: chunkMeta,
+        parent: frag.type,
+        data: initSegment
+      };
+      this.hls.trigger(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].BUFFER_APPENDING, segment);
+    } // trigger handler right now
+
+
+    this.tick();
+  };
+
+  _proto.loadFragment = function loadFragment(frag, trackDetails, targetBufferTime) {
+    // only load if fragment is not loaded or if in audio switch
+    var fragState = this.fragmentTracker.getState(frag);
+    this.fragCurrent = frag; // we force a frag loading in audio switch as fragment tracker might not have evicted previous frags in case of quick audio switch
+
+    if (this.audioSwitch || fragState === _fragment_tracker__WEBPACK_IMPORTED_MODULE_4__["FragmentState"].NOT_LOADED || fragState === _fragment_tracker__WEBPACK_IMPORTED_MODULE_4__["FragmentState"].PARTIAL) {
+      if (frag.sn === 'initSegment') {
+        this._loadInitSegment(frag);
+      } else if (trackDetails.live && !Object(_home_grbla_screen9_git_outside_hls_js_screen9_hls_js_src_polyfills_number__WEBPACK_IMPORTED_MODULE_0__["isFiniteNumber"])(this.initPTS[frag.cc])) {
+        this.log("Waiting for video PTS in continuity counter " + frag.cc + " of live stream before loading audio fragment " + frag.sn + " of level " + this.trackId);
+        this.state = _base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["State"].WAITING_INIT_PTS;
+      } else {
+        this.startFragRequested = true;
+
+        _BaseStreamController.prototype.loadFragment.call(this, frag, trackDetails, targetBufferTime);
+      }
+    }
+  };
+
+  _proto.completeAudioSwitch = function completeAudioSwitch() {
+    var hls = this.hls,
+        media = this.media,
+        trackId = this.trackId;
+
+    if (media) {
+      this.log('Switching audio track : flushing all audio');
+
+      _BaseStreamController.prototype.flushMainBuffer.call(this, 0, Number.POSITIVE_INFINITY, 'audio');
+    }
+
+    this.audioSwitch = false;
+    hls.trigger(_events__WEBPACK_IMPORTED_MODULE_2__["Events"].AUDIO_TRACK_SWITCHED, {
+      id: trackId
+    });
+  };
+
+  return AudioStreamController;
+}(_base_stream_controller__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (AudioStreamController);
+
+/***/ }),
+
+/***/ "./src/controller/audio-track-controller.ts":
+/*!**************************************************!*\
+  !*** ./src/controller/audio-track-controller.ts ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../events */ "./src/events.ts");
+/* harmony import */ var _errors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../errors */ "./src/errors.ts");
+/* harmony import */ var _base_playlist_controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./base-playlist-controller */ "./src/controller/base-playlist-controller.ts");
+/* harmony import */ var _types_loader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../types/loader */ "./src/types/loader.ts");
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+
+var AudioTrackController = /*#__PURE__*/function (_BasePlaylistControll) {
+  _inheritsLoose(AudioTrackController, _BasePlaylistControll);
+
+  function AudioTrackController(hls) {
+    var _this;
+
+    _this = _BasePlaylistControll.call(this, hls, '[audio-track-controller]') || this;
+    _this.tracks = [];
+    _this.groupId = null;
+    _this.tracksInGroup = [];
+    _this.trackId = -1;
+    _this.trackName = '';
+    _this.selectDefaultTrack = true;
+
+    _this.registerListeners();
+
+    return _this;
+  }
+
+  var _proto = AudioTrackController.prototype;
+
+  _proto.registerListeners = function registerListeners() {
+    var hls = this.hls;
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].MANIFEST_LOADING, this.onManifestLoading, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].MANIFEST_PARSED, this.onManifestParsed, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].LEVEL_LOADING, this.onLevelLoading, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].LEVEL_SWITCHING, this.onLevelSwitching, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].AUDIO_TRACK_LOADED, this.onAudioTrackLoaded, this);
+    hls.on(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].ERROR, this.onError, this);
+  };
+
+  _proto.unregisterListeners = function unregisterListeners() {
+    var hls = this.hls;
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].MANIFEST_LOADING, this.onManifestLoading, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].MANIFEST_PARSED, this.onManifestParsed, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].LEVEL_LOADING, this.onLevelLoading, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].LEVEL_SWITCHING, this.onLevelSwitching, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].AUDIO_TRACK_LOADED, this.onAudioTrackLoaded, this);
+    hls.off(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].ERROR, this.onError, this);
+  };
+
+  _proto.destroy = function destroy() {
+    this.unregisterListeners();
+    this.tracks.length = 0;
+    this.tracksInGroup.length = 0;
+
+    _BasePlaylistControll.prototype.destroy.call(this);
+  };
+
+  _proto.onManifestLoading = function onManifestLoading() {
+    this.tracks = [];
+    this.groupId = null;
+    this.tracksInGroup = [];
+    this.trackId = -1;
+    this.trackName = '';
+    this.selectDefaultTrack = true;
+  };
+
+  _proto.onManifestParsed = function onManifestParsed(event, data) {
+    this.tracks = data.audioTracks || [];
+  };
+
+  _proto.onAudioTrackLoaded = function onAudioTrackLoaded(event, data) {
+    var id = data.id,
+        details = data.details;
+    var currentTrack = this.tracksInGroup[id];
+
+    if (!currentTrack) {
+      this.warn("Invalid audio track id " + id);
+      return;
+    }
+
+    var curDetails = currentTrack.details;
+    currentTrack.details = data.details;
+    this.log("audioTrack " + id + " loaded [" + details.startSN + "-" + details.endSN + "]");
+
+    if (id === this.trackId) {
+      this.retryCount = 0;
+      this.playlistLoaded(id, data, curDetails);
+    }
+  };
+
+  _proto.onLevelLoading = function onLevelLoading(event, data) {
+    this.switchLevel(data.level);
+  };
+
+  _proto.onLevelSwitching = function onLevelSwitching(event, data) {
+    this.switchLevel(data.level);
+  };
+
+  _proto.switchLevel = function switchLevel(levelIndex) {
+    var levelInfo = this.hls.levels[levelIndex];
+
+    if (!(levelInfo !== null && levelInfo !== void 0 && levelInfo.audioGroupIds)) {
+      return;
+    }
+
+    var audioGroupId = levelInfo.audioGroupIds[levelInfo.urlId];
+
+    if (this.groupId !== audioGroupId) {
+      this.groupId = audioGroupId;
+      var audioTracks = this.tracks.filter(function (track) {
+        return !audioGroupId || track.groupId === audioGroupId;
+      }); // Disable selectDefaultTrack if there are no default tracks
+
+      if (this.selectDefaultTrack && !audioTracks.some(function (track) {
+        return track.default;
+      })) {
+        this.selectDefaultTrack = false;
+      }
+
+      this.tracksInGroup = audioTracks;
+      var audioTracksUpdated = {
+        audioTracks: audioTracks
+      };
+      this.log("Updating audio tracks, " + audioTracks.length + " track(s) found in \"" + audioGroupId + "\" group-id");
+      this.hls.trigger(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].AUDIO_TRACKS_UPDATED, audioTracksUpdated);
+      this.selectInitialTrack();
+    }
+  };
+
+  _proto.onError = function onError(event, data) {
+    _BasePlaylistControll.prototype.onError.call(this, event, data);
+
+    if (data.fatal || !data.context) {
+      return;
+    }
+
+    if (data.context.type === _types_loader__WEBPACK_IMPORTED_MODULE_3__["PlaylistContextType"].AUDIO_TRACK && data.context.id === this.trackId && data.context.groupId === this.groupId) {
+      this.retryLoadingOrFail(data);
+    }
+  };
+
+  _proto.setAudioTrack = function setAudioTrack(newId) {
+    var tracks = this.tracksInGroup; // check if level idx is valid
+
+    if (newId < 0 || newId >= tracks.length) {
+      this.warn('Invalid id passed to audio-track controller');
+      return;
+    } // stopping live reloading timer if any
+
+
+    this.clearTimer();
+    var lastTrack = tracks[this.trackId];
+    this.log("Now switching to audio-track index " + newId);
+    var track = tracks[newId];
+    var id = track.id,
+        _track$groupId = track.groupId,
+        groupId = _track$groupId === void 0 ? '' : _track$groupId,
+        name = track.name,
+        type = track.type,
+        url = track.url;
+    this.trackId = newId;
+    this.trackName = name;
+    this.selectDefaultTrack = false;
+    this.hls.trigger(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].AUDIO_TRACK_SWITCHING, {
+      id: id,
+      groupId: groupId,
+      name: name,
+      type: type,
+      url: url
+    }); // Do not reload track unless live
+
+    if (track.details && !track.details.live) {
+      return;
+    }
+
+    var hlsUrlParameters = this.switchParams(track.url, lastTrack === null || lastTrack === void 0 ? void 0 : lastTrack.details);
+    this.loadPlaylist(hlsUrlParameters);
+  };
+
+  _proto.selectInitialTrack = function selectInitialTrack() {
+    var audioTracks = this.tracksInGroup;
+    console.assert(audioTracks.length, 'Initial audio track should be selected when tracks are known');
+    var currentAudioTrackName = this.trackName;
+    var trackId = this.findTrackId(currentAudioTrackName) || this.findTrackId();
+
+    if (trackId !== -1) {
+      this.setAudioTrack(trackId);
+    } else {
+      this.warn("No track found for running audio group-ID: " + this.groupId);
+      this.hls.trigger(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].ERROR, {
+        type: _errors__WEBPACK_IMPORTED_MODULE_1__["ErrorTypes"].MEDIA_ERROR,
+        details: _errors__WEBPACK_IMPORTED_MODULE_1__["ErrorDetails"].AUDIO_TRACK_LOAD_ERROR,
+        fatal: true
+      });
+    }
+  };
+
+  _proto.findTrackId = function findTrackId(name) {
+    var audioTracks = this.tracksInGroup;
+
+    for (var i = 0; i < audioTracks.length; i++) {
+      var track = audioTracks[i];
+
+      if (!this.selectDefaultTrack || track.default) {
+        if (!name || name === track.name) {
+          return track.id;
+        }
+      }
+    }
+
+    return -1;
+  };
+
+  _proto.loadPlaylist = function loadPlaylist(hlsUrlParameters) {
+    var audioTrack = this.tracksInGroup[this.trackId];
+
+    if (this.shouldLoadTrack(audioTrack)) {
+      var id = audioTrack.id;
+      var groupId = audioTrack.groupId;
+      var url = audioTrack.url;
+
+      if (hlsUrlParameters) {
+        try {
+          url = hlsUrlParameters.addDirectives(url);
+        } catch (error) {
+          this.warn("Could not construct new URL with HLS Delivery Directives: " + error);
+        }
+      } // track not retrieved yet, or live playlist we need to (re)load it
+
+
+      this.log("loading audio-track playlist for id: " + id);
+      this.clearTimer();
+      this.hls.trigger(_events__WEBPACK_IMPORTED_MODULE_0__["Events"].AUDIO_TRACK_LOADING, {
+        url: url,
+        id: id,
+        groupId: groupId,
+        deliveryDirectives: hlsUrlParameters || null
+      });
+    }
+  };
+
+  _createClass(AudioTrackController, [{
+    key: "audioTracks",
+    get: function get() {
+      return this.tracksInGroup;
+    }
+  }, {
+    key: "audioTrack",
+    get: function get() {
+      return this.trackId;
+    },
+    set: function set(newId) {
+      // If audio track is selected from API then don't choose from the manifest default track
+      this.selectDefaultTrack = false;
+      this.setAudioTrack(newId);
+    }
+  }]);
+
+  return AudioTrackController;
+}(_base_playlist_controller__WEBPACK_IMPORTED_MODULE_2__["default"]);
+
+/* harmony default export */ __webpack_exports__["default"] = (AudioTrackController);
 
 /***/ }),
 
