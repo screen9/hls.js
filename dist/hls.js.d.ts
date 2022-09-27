@@ -75,6 +75,7 @@ declare class AudioStreamController extends BaseStreamController implements Netw
     startLoad(startPosition: number): void;
     doTick(): void;
     clearWaitingFragment(): void;
+    protected resetLoadingState(): void;
     protected onTickEnd(): void;
     private doTickIdle;
     protected getMaxBufferLength(mainBufferLength?: number): number;
@@ -190,8 +191,8 @@ declare class BaseStreamController extends TaskLoop implements NetworkComponentA
     protected fragmentTracker: FragmentTracker;
     protected transmuxer: TransmuxerInterface | null;
     protected _state: string;
-    protected media?: any;
-    protected mediaBuffer?: any;
+    protected media: HTMLMediaElement | null;
+    protected mediaBuffer: Bufferable | null;
     protected config: HlsConfig;
     protected bitrateTest: boolean;
     protected lastCurrentTime: number;
@@ -222,6 +223,7 @@ declare class BaseStreamController extends TaskLoop implements NetworkComponentA
     protected onMediaSeeking(): void;
     protected onMediaEnded(): void;
     onKeyLoaded(event: Events.KEY_LOADED, data: KeyLoadedData): void;
+    protected onLevelSwitching(event: Events.LEVEL_SWITCHING, data: LevelSwitchingData): void;
     protected onHandlerDestroying(): void;
     protected onHandlerDestroyed(): void;
     protected loadKey(frag: Fragment, details: LevelDetails): void;
@@ -231,6 +233,7 @@ declare class BaseStreamController extends TaskLoop implements NetworkComponentA
     protected _loadInitSegment(frag: Fragment): void;
     protected fragContextChanged(frag: Fragment | null): boolean;
     protected fragBufferedComplete(frag: Fragment, part: Part | null): void;
+    protected seekToStartPos(): void;
     protected _handleFragmentLoadComplete(fragLoadedEndData: PartsLoadedData): void;
     protected _handleFragmentLoadProgress(frag: FragLoadedData): void;
     protected _doFragLoad(frag: Fragment, details?: LevelDetails, targetBufferTime?: number | null, progressCallback?: FragmentLoadProgressCallback): Promise<PartsLoadedData | FragLoadedData | null>;
@@ -244,7 +247,7 @@ declare class BaseStreamController extends TaskLoop implements NetworkComponentA
     } | null;
     protected bufferFragmentData(data: RemuxedTrack, frag: Fragment, part: Part | null, chunkMeta: ChunkMetadata): void;
     protected flushBufferGap(frag: Fragment): void;
-    protected getFwdBufferInfo(bufferable: Bufferable, type: PlaylistLevelType): {
+    protected getFwdBufferInfo(bufferable: Bufferable | null, type: PlaylistLevelType): {
         len: number;
         start: number;
         end: number;
@@ -253,6 +256,7 @@ declare class BaseStreamController extends TaskLoop implements NetworkComponentA
     protected getMaxBufferLength(levelBitrate?: number): number;
     protected reduceMaxBufferLength(threshold?: number): boolean;
     protected getNextFragment(pos: number, levelDetails: LevelDetails): Fragment | null;
+    mapToInitFragWhenRequired(frag: Fragment | null): typeof frag;
     getNextPart(partList: Part[], frag: Fragment, targetBufferTime: number): number;
     private loadedEndOfParts;
     protected getInitialLiveFragment(levelDetails: LevelDetails, fragments: Array<Fragment>): Fragment | null;
@@ -267,7 +271,7 @@ declare class BaseStreamController extends TaskLoop implements NetworkComponentA
     protected onFragmentOrKeyLoadError(filterType: PlaylistLevelType, data: ErrorData): void;
     protected afterBufferFlushed(media: Bufferable, bufferType: SourceBufferName, playlistType: PlaylistLevelType): void;
     protected resetLoadingState(): void;
-    protected resetLiveStartWhenNotLoaded(level: number): boolean;
+    protected resetStartWhenNotLoaded(level: number): void;
     private updateLevelTiming;
     protected resetTransmuxer(): void;
     set state(nextState: string);
@@ -1947,6 +1951,7 @@ export declare interface LevelAttributes extends AttrList {
     BANDWIDTH?: string;
     BYTERANGE?: string;
     'CLOSED-CAPTIONS'?: string;
+    CHARACTERISTICS?: string;
     CODECS?: string;
     DEFAULT?: string;
     FORCED?: string;
@@ -2456,7 +2461,6 @@ declare class StreamController extends BaseStreamController implements NetworkCo
     private onvplaying;
     private onvseeked;
     private fragLastKbps;
-    private stalled;
     private couldBacktrack;
     private backtrackFragment;
     private audioCodecSwitch;
@@ -2505,9 +2509,8 @@ declare class StreamController extends BaseStreamController implements NetworkCo
     swapAudioCodec(): void;
     /**
      * Seeks to the set startPosition if not equal to the mediaElement's current time.
-     * @private
      */
-    private seekToStartPos;
+    protected seekToStartPos(): void;
     private _getAudioCodec;
     private _loadBitrateTestFrag;
     private _handleTransmuxComplete;
@@ -2590,7 +2593,7 @@ declare class SubtitleStreamController extends BaseStreamController implements N
     _handleFragmentLoadComplete(fragLoadedData: FragLoadedData): void;
     doTick(): void;
     protected loadFragment(frag: Fragment, levelDetails: LevelDetails, targetBufferTime: number): void;
-    get mediaBufferTimeRanges(): TimeRange[];
+    get mediaBufferTimeRanges(): Bufferable;
 }
 
 declare class SubtitleTrackController extends BasePlaylistController {
@@ -2764,6 +2767,7 @@ declare class TimelineController implements ComponentAPI {
     private onManifestLoading;
     private _cleanTracks;
     private onSubtitleTracksUpdated;
+    private _captionsOrSubtitlesFromCharacteristics;
     private onManifestLoaded;
     private onFragLoading;
     private onFragLoaded;
@@ -2793,11 +2797,6 @@ export declare type TimelineControllerConfig = {
     captionsTextTrack4LanguageCode: string;
     renderTextTracksNatively: boolean;
 };
-
-declare interface TimeRange {
-    start: number;
-    end: number;
-}
 
 export declare interface Track {
     id: 'audio' | 'main';
