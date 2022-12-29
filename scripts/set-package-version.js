@@ -64,16 +64,16 @@ try {
     );
   }
 
-  const foundPreviousVersion = versionParser
-    .getPotentialPreviousStableVersions(`v${newVersion}`)
-    .every((potentialPreviousVersion) =>
-      hasTag(`v${potentialPreviousVersion}`)
-    );
-  if (!foundPreviousVersion) {
-    throw new Error(
-      'Could not find a previous version. The tag must follow a previous stable version number.'
-    );
-  }
+  // const foundPreviousVersion = versionParser
+  //   .getPotentialPreviousStableVersions(`v${newVersion}`)
+  //   .every((potentialPreviousVersion) =>
+  //     hasTag(`v${potentialPreviousVersion}`)
+  //   );
+  // if (!foundPreviousVersion) {
+  //   throw new Error(
+  //     'Could not find a previous version. The tag must follow a previous stable version number.'
+  //   );
+  // }
 
   packageJson.version = newVersion;
   fs.writeFileSync('./package.json', JSON.stringify(packageJson), {
