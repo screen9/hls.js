@@ -219,6 +219,16 @@ export interface BufferFlushingData {
     type: SourceBufferName | null;
 }
 
+// Warning: (ae-missing-release-tag) "BufferInfo" is part of the package's API, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public (undocumented)
+export type BufferInfo = {
+    len: number;
+    start: number;
+    end: number;
+    nextStart?: number;
+};
+
 // Warning: (ae-missing-release-tag) "CapLevelControllerConfig" is part of the package's API, but it is missing a release tag (@alpha, @beta, @public, or @internal)
 //
 // @public (undocumented)
@@ -724,6 +734,8 @@ export interface FragLoadingData {
 export class Fragment extends BaseSegment {
     constructor(type: PlaylistLevelType, baseurl: string);
     // (undocumented)
+    abortRequests(): void;
+    // (undocumented)
     appendedPTS?: number;
     // (undocumented)
     bitrateTest: boolean;
@@ -752,6 +764,8 @@ export class Fragment extends BaseSegment {
     endPTS?: number;
     // (undocumented)
     initSegment: Fragment | null;
+    // (undocumented)
+    keyLoader: Loader<KeyLoaderContext> | null;
     // (undocumented)
     level: number;
     // (undocumented)
@@ -816,6 +830,8 @@ export interface FragmentLoaderContext extends LoaderContext {
     frag: Fragment;
     // (undocumented)
     part: Part | null;
+    // (undocumented)
+    resetIV?: boolean;
 }
 
 // Warning: (ae-missing-release-tag) "FragParsedData" is part of the package's API, but it is missing a release tag (@alpha, @beta, @public, or @internal)
@@ -922,8 +938,6 @@ class Hls implements HlsEventEmitter {
     get lowLatencyMode(): boolean;
     // Warning: (ae-setter-with-docs) The doc comment for the property "lowLatencyMode" must appear on the getter, not the setter.
     set lowLatencyMode(mode: boolean);
-    // Warning: (ae-forgotten-export) The symbol "BufferInfo" needs to be exported by the entry point hls.d.ts
-    //
     // (undocumented)
     get mainForwardBufferInfo(): BufferInfo | null;
     get manualLevel(): number;
@@ -969,6 +983,7 @@ class Hls implements HlsEventEmitter {
     get targetLatency(): number | null;
     // (undocumented)
     trigger<E extends keyof HlsListeners>(event: E, eventObject: Parameters<HlsListeners[E]>[1]): boolean;
+    get ttfbEstimate(): number;
     // (undocumented)
     readonly userConfig: Partial<HlsConfig>;
     // (undocumented)
@@ -1216,6 +1231,12 @@ export interface InitPTSFoundData {
 export interface KeyLoadedData {
     // (undocumented)
     frag: Fragment;
+}
+
+// Warning: (ae-missing-release-tag) "KeyLoaderContext" is part of the package's API, but it is missing a release tag (@alpha, @beta, @public, or @internal)
+//
+// @public (undocumented)
+export interface KeyLoaderContext extends FragmentLoaderContext {
 }
 
 // Warning: (ae-missing-release-tag) "KeyLoadingData" is part of the package's API, but it is missing a release tag (@alpha, @beta, @public, or @internal)

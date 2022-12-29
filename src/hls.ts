@@ -1,6 +1,5 @@
 import * as URLToolkit from 'url-toolkit';
 import PlaylistLoader from './loader/playlist-loader';
-import KeyLoader from './loader/key-loader';
 import ID3TrackController from './controller/id3-track-controller';
 import LatencyController from './controller/latency-controller';
 import LevelController from './controller/level-controller';
@@ -25,7 +24,7 @@ import type { MediaPlaylist } from './types/media-playlist';
 import type { HlsConfig } from './config';
 import type { Level } from './types/level';
 import type { Fragment } from './loader/fragment';
-import { BufferInfo } from './utils/buffer-helper';
+import type { BufferInfo } from './utils/buffer-helper';
 
 /**
  * @module Hls
@@ -124,7 +123,6 @@ export default class Hls implements HlsEventEmitter {
 
     const fpsController = new ConfigFpsController(this);
     const playListLoader = new PlaylistLoader(this);
-    const keyLoader = new KeyLoader(this);
     const id3TrackController = new ID3TrackController(this);
 
     // network controllers
@@ -143,7 +141,6 @@ export default class Hls implements HlsEventEmitter {
 
     const networkControllers = [
       playListLoader,
-      keyLoader,
       levelController,
       streamController,
     ];
@@ -587,6 +584,18 @@ export default class Hls implements HlsEventEmitter {
   }
 
   /**
+   * get time to first byte estimate
+   * @type {number}
+   */
+  get ttfbEstimate(): number {
+    const { bwEstimator } = this.abrController;
+    if (!bwEstimator) {
+      return NaN;
+    }
+    return bwEstimator.getEstimateTTFB();
+  }
+
+  /**
    * Capping/max level value that should be used by automatic level selection algorithm (`ABRController`)
    * @type {number}
    */
@@ -896,6 +905,7 @@ export type {
   PlaylistContextType,
   PlaylistLoaderContext,
   FragmentLoaderContext,
+  KeyLoaderContext,
   Loader,
   LoaderStats,
   LoaderContext,
@@ -977,3 +987,4 @@ export type {
   SubtitleTrackSwitchData,
 } from './types/events';
 export type { AttrList } from './utils/attr-list';
+export type { BufferInfo } from './utils/buffer-helper';
