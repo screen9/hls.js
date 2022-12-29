@@ -17,8 +17,8 @@ coverage/
 
 # Build
 /lib
-/dist
-/dist.zip
+# /dist
+# /dist.zip
 /netlify
 /api-docs
 
