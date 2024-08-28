@@ -676,7 +676,7 @@ export default class BaseStreamController
     targetBufferTime = Math.max(frag.start, targetBufferTime || 0);
     if (this.config.lowLatencyMode && frag.sn !== 'initSegment') {
       const partList = details.partList;
-      if (partList && progressCallback) {
+      if (partList && progressCallback && targetBufferTime >= (partList[0]?.start || 0)) {
         if (targetBufferTime > frag.end && details.fragmentHint) {
           frag = details.fragmentHint;
         }
