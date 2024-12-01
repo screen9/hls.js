@@ -326,9 +326,9 @@ export default class BasePlaylistController implements NetworkComponentAPI {
         this.warn(
           `Retrying playlist loading ${retryCount + 1}/${
             retryConfig.maxNumRetry
-          } after "${errorDetails}" without delivery-directives`,
+          } after "${errorDetails}" "${retryCount ? 'without' : 'with'}" delivery-directives`,
         );
-        this.loadPlaylist();
+        this.loadPlaylist(retryCount ? undefined : errorEvent.context?.deliveryDirectives);
       } else {
         const delay = getRetryDelay(retryConfig, retryCount);
         // Schedule level/track reload
