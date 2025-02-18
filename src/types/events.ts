@@ -93,12 +93,20 @@ export type ContentSteeringOptions = {
   pathwayId: string;
 };
 
+export type QcImageData = {
+  resolution: string;
+  layout: string;
+  duration: number;
+  uri: string;
+};
+
 export interface ManifestLoadedData {
   audioTracks: MediaPlaylist[];
   captions?: MediaPlaylist[];
   contentSteering: ContentSteeringOptions | null;
   levels: LevelParsed[];
   networkDetails: any;
+  qcImage: QcImageData | null;
   sessionData: Record<string, AttrList> | null;
   sessionKeys: LevelKey[] | null;
   startTimeOffset: number | null;
@@ -111,6 +119,7 @@ export interface ManifestLoadedData {
 export interface ManifestParsedData {
   levels: Level[];
   audioTracks: MediaPlaylist[];
+  qcImage: QcImageData | null;
   subtitleTracks: MediaPlaylist[];
   sessionData: Record<string, AttrList> | null;
   sessionKeys: LevelKey[] | null;

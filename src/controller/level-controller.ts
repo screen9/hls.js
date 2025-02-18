@@ -360,6 +360,7 @@ export default class LevelController extends BasePlaylistController {
     const edata: ManifestParsedData = {
       levels,
       audioTracks,
+      qcImage: data.qcImage,
       subtitleTracks,
       sessionData: data.sessionData,
       sessionKeys: data.sessionKeys,

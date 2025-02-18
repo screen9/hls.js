@@ -17,7 +17,7 @@ import type { CodecType } from '../utils/codecs';
 import type { MediaPlaylist, MediaAttributes } from '../types/media-playlist';
 import type { PlaylistLevelType } from '../types/loader';
 import type { LevelAttributes, LevelParsed, VariableMap } from '../types/level';
-import type { ContentSteeringOptions } from '../types/events';
+import type { ContentSteeringOptions, QcImageData } from '../types/events';
 
 type M3U8ParserFragments = Array<Fragment | null>;
 
@@ -30,6 +30,7 @@ export type ParsedMultivariantPlaylist = {
   startTimeOffset: number | null;
   variableList: VariableMap | null;
   hasVariableRefs: boolean;
+  qcImage: QcImageData | null;
 };
 
 type ParsedMultivariantMediaOptions = {
@@ -39,7 +40,7 @@ type ParsedMultivariantMediaOptions = {
 };
 
 const MASTER_PLAYLIST_REGEX =
-  /#EXT-X-STREAM-INF:([^\r\n]*)(?:[\r\n](?:#[^\r\n]*)?)*([^\r\n]+)|#EXT-X-(SESSION-DATA|SESSION-KEY|DEFINE|CONTENT-STEERING|START):([^\r\n]*)[\r\n]+/g;
+  /#EXT-X-STREAM-INF:([^\r\n]*)(?:[\r\n](?:#[^\r\n]*)?)*([^\r\n]+)|#EXT-X-(SESSION-DATA|SESSION-KEY|DEFINE|CONTENT-STEERING|START):([^\r\n]*)[\r\n]+|#EXT-X-QC-IMAGE-INF:([^\r\n]*)[\r\n]+/g;
 const MASTER_PLAYLIST_MEDIA_REGEX = /#EXT-X-MEDIA:(.*)/g;
 
 const IS_MEDIA_PLAYLIST = /^#EXT(?:INF|-X-TARGETDURATION):/m; // Handle empty Media Playlist (first EXTINF not signaled, but TARGETDURATION present)
@@ -54,6 +55,8 @@ const LEVEL_PLAYLIST_REGEX_FAST = new RegExp(
   ].join('|'),
   'g',
 );
+
+const QC_IMAGE_INF_REGEX = /RESOLUTION=(\d+x\d+),LAYOUT=(\d+x\d+),DURATION=([\d.]+),URI=([^\r\n]*)/;
 
 const LEVEL_PLAYLIST_REGEX_SLOW = new RegExp(
   [
@@ -111,6 +114,7 @@ export default class M3U8Parser {
       startTimeOffset: null,
       variableList: null,
       hasVariableRefs,
+      qcImage: null
     };
     const levelsWithKnownCodecs: LevelParsed[] = [];
 
@@ -238,6 +242,21 @@ export default class M3U8Parser {
           }
           default:
             break;
+        }
+      } else if (result[5]) {
+        const qcImageInf = result[5];
+        const qcMatch = QC_IMAGE_INF_REGEX.exec(qcImageInf);
+        if (qcMatch) {
+          const resolution = qcMatch[1];
+          const layout = qcMatch[2];
+          const duration = parseFloat(qcMatch[3]);
+          const uri = qcMatch[4];
+          parsed.qcImage = {
+            resolution,
+            layout,
+            duration,
+            uri
+          }
         }
       }
     }

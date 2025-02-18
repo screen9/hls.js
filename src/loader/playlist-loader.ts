@@ -379,6 +379,7 @@ class PlaylistLoader implements NetworkComponentAPI {
     const {
       contentSteering,
       levels,
+      qcImage,
       sessionData,
       sessionKeys,
       startTimeOffset,
@@ -435,6 +436,7 @@ class PlaylistLoader implements NetworkComponentAPI {
       url,
       stats,
       networkDetails,
+      qcImage,
       sessionData,
       sessionKeys,
       startTimeOffset,
@@ -488,6 +490,7 @@ class PlaylistLoader implements NetworkComponentAPI {
         url,
         stats,
         networkDetails,
+        qcImage: null,
         sessionData: null,
         sessionKeys: null,
         contentSteering: null,
