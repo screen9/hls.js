@@ -1,22 +1,21 @@
+import chai from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import SubtitleTrackController from '../../../src/controller/subtitle-track-controller';
-import Hls from '../../../src/hls';
-import { LoadStats } from '../../../src/loader/load-stats';
-import { LevelDetails } from '../../../src/loader/level-details';
 import { Events } from '../../../src/events';
+import Hls from '../../../src/hls';
+import { LevelDetails } from '../../../src/loader/level-details';
+import { LoadStats } from '../../../src/loader/load-stats';
 import { AttrList } from '../../../src/utils/attr-list';
-import type {
-  MediaAttributes,
-  MediaPlaylist,
-} from '../../../src/types/media-playlist';
-import type { Level } from '../../../src/types/level';
 import type {
   ComponentAPI,
   NetworkComponentAPI,
 } from '../../../src/types/component-api';
-
-import sinon from 'sinon';
-import chai from 'chai';
-import sinonChai from 'sinon-chai';
+import type { Level } from '../../../src/types/level';
+import type {
+  MediaAttributes,
+  MediaPlaylist,
+} from '../../../src/types/media-playlist';
 
 chai.use(sinonChai);
 const expect = chai.expect;
@@ -129,6 +128,7 @@ describe('SubtitleTrackController', function () {
         pathwayId: undefined,
         url: '',
         deliveryDirectives: null,
+        levelInfo: {} as any,
       });
     };
 
@@ -387,6 +387,7 @@ describe('SubtitleTrackController', function () {
           id: 1,
           groupId: 'default-text-group',
           deliveryDirectives: null,
+          track: subtitleTrackController.subtitleTracks[1],
         },
       );
     });
@@ -419,9 +420,13 @@ describe('SubtitleTrackController', function () {
       );
     });
 
-    it('should trigger SUBTITLE_TRACK_LOADING if the track is live, even if it has details', function () {
+    it('should trigger SUBTITLE_TRACK_LOADING if the track is live and needs to be reloaded', function () {
       const triggerSpy = sandbox.spy(hls, 'trigger');
-      subtitleTracks[2].details = { live: true } as any;
+      subtitleTracks[2].details = {
+        live: true,
+        requestScheduled: -100000,
+        targetduration: 2,
+      } as any;
       subtitleTrackController.startLoad();
       subtitleTrackController.subtitleTrack = 2;
 
@@ -433,6 +438,7 @@ describe('SubtitleTrackController', function () {
           id: 2,
           groupId: 'default-text-group',
           deliveryDirectives: null,
+          track: subtitleTrackController.subtitleTracks[2],
         },
       );
     });
@@ -490,6 +496,7 @@ describe('SubtitleTrackController', function () {
         stats: new LoadStats(),
         networkDetails: {},
         deliveryDirectives: null,
+        track: {} as any,
       };
       hls.trigger(Events.SUBTITLE_TRACK_LOADED, mockLoadedEvent);
       expect((subtitleTrackController as any).timer).to.equal(-1);
@@ -522,6 +529,7 @@ describe('SubtitleTrackController', function () {
         stats: new LoadStats(),
         networkDetails: {},
         deliveryDirectives: null,
+        track: {} as any,
       };
 
       hls.subtitleTrack = -1;
@@ -545,6 +553,7 @@ describe('SubtitleTrackController', function () {
         stats: new LoadStats(),
         networkDetails: {},
         deliveryDirectives: null,
+        track: {} as any,
       });
       expect((subtitleTrackController as any).timer).to.equal(-1);
     });
@@ -561,6 +570,7 @@ describe('SubtitleTrackController', function () {
         stats: new LoadStats(),
         networkDetails: {},
         deliveryDirectives: null,
+        track: {} as any,
       });
       expect((subtitleTrackController as any).timer).to.exist;
     });
@@ -578,6 +588,7 @@ describe('SubtitleTrackController', function () {
         stats: new LoadStats(),
         networkDetails: {},
         deliveryDirectives: null,
+        track: {} as any,
       });
       expect((subtitleTrackController as any).timer).to.equal(-1);
     });

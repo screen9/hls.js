@@ -1,16 +1,15 @@
-import Hls from '../../../src/hls';
-import { Events } from '../../../src/events';
+import chai from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+import { multivariantPlaylistWithRedundantFallbacks } from './level-controller';
 import { ErrorDetails, ErrorTypes } from '../../../src/errors';
+import { Events } from '../../../src/events';
+import Hls from '../../../src/hls';
 import type {
   ErrorData,
   FragLoadedData,
   LevelSwitchingData,
 } from '../../../src/types/events';
-
-import sinon from 'sinon';
-import chai from 'chai';
-import sinonChai from 'sinon-chai';
-import { multivariantPlaylistWithRedundantFallbacks } from './level-controller';
 
 chai.use(sinonChai);
 const expect = chai.expect;
@@ -126,7 +125,7 @@ describe('ErrorController Integration Tests', function () {
         expectFatalErrorEventToStopPlayer(
           hls,
           ErrorDetails.MANIFEST_INCOMPATIBLE_CODECS_ERROR,
-          'no level with compatible codecs found in manifest',
+          'no level with compatible codecs found in manifest (one or more CODECS in variant not supported: ["avc9.000000,mp5a.40.2,av99.000000"])',
         ),
       );
     });
@@ -267,7 +266,10 @@ describe('ErrorController Integration Tests', function () {
       hls.loadSource('noSegmentsVod.m3u8');
       hls.stopLoad.should.have.been.calledOnce;
       return new Promise((resolve, reject) => {
-        hls.on(Events.ERROR, (event, data) => resolve(data));
+        hls.on(Events.ERROR, (event, data) => {
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
+          Promise.resolve().then(() => resolve(data));
+        });
         hls.on(Events.LEVEL_LOADED, () =>
           reject(
             new Error(
@@ -712,6 +714,7 @@ segment.mp4
       hls.on(Events.FRAG_LOADING, loadingEventCallback(server, timers));
       hls.on(Events.ERROR, (event, data) => {
         errors.push(data);
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         Promise.resolve().then(() => timers.tick(2000));
       });
       return new Promise((resolve, reject) => {
@@ -822,6 +825,7 @@ segment.mp4
       hls.on(Events.FRAG_LOADING, loadingEventCallback(server, timers));
       hls.on(Events.ERROR, (event, data) => {
         errors.push(data);
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         Promise.resolve().then(() => timers.tick(2000));
       });
       return new Promise((resolve, reject) => {
@@ -967,6 +971,7 @@ function setupMockServerResponses(server: sinon.SinonFakeServer) {
 
 function loadingEventCallback(server, timers) {
   return (event, data) => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     Promise.resolve().then(() => {
       server.respond();
     });

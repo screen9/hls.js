@@ -3,8 +3,10 @@ import EventEmitter from 'eventemitter3';
 import sinonChai from 'sinon-chai';
 import { hlsDefaultConfig } from '../../../src/config';
 import MP4Remuxer from '../../../src/remux/mp4-remuxer';
+import { logger } from '../../../src/utils/logger';
 import type { HlsEventEmitter } from '../../../src/events';
 import type { VideoSample } from '../../../src/types/demuxer';
+import type { TypeSupported } from '../../../src/utils/codecs';
 
 chai.use(sinonChai);
 const expect = chai.expect;
@@ -15,12 +17,12 @@ describe('mp4-remuxer', function () {
   beforeEach(function () {
     const observer: HlsEventEmitter = new EventEmitter() as HlsEventEmitter;
     const config = { ...hlsDefaultConfig };
-    const typeSupported = {
+    const typeSupported: TypeSupported = {
       mpeg: true,
       mp3: true,
       ac3: true,
     };
-    mp4Remuxer = new MP4Remuxer(observer, config, typeSupported);
+    mp4Remuxer = new MP4Remuxer(observer, config, typeSupported, logger);
   });
 
   afterEach(function () {
@@ -87,6 +89,5 @@ function ptsDts(pts: number, dts: number): VideoSample {
       },
     ],
     length: 1,
-    debug: '',
   };
 }

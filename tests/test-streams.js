@@ -159,11 +159,21 @@ module.exports = {
     description: 'Duplicate sequential PDT values',
     abr: false,
   },
-  pdtLargeGap: {
-    url: 'https://playertest.longtailvideo.com/adaptive/boxee/playlist.m3u8',
-    description: 'PDTs with large gaps following discontinuities',
-    abr: false,
-  },
+  pdtLargeGap: createTestStreamWithConfig(
+    {
+      url: 'https://playertest.longtailvideo.com/adaptive/boxee/playlist.m3u8',
+      description: 'PDTs with large gaps following discontinuities',
+      abr: false,
+    },
+    {
+      // gaps are introduced by missing audio samples in the TS segments
+      // silent audio insertion can only prepend missing back to the last appended time provided there is room
+      // The discontinuities and starting offset of the timestamps do not allow prepending earlier than the start of the disco
+      allowedBufferedRangesInSeekTest: 7,
+      // Ignore "should buffer up to maxBufferLength" result
+      avBufferOffset: 39,
+    },
+  ),
   pdtBadValues: {
     url: 'https://playertest.longtailvideo.com/adaptive/progdatime/playlist2.m3u8',
     description: 'PDTs with bad values',
@@ -260,6 +270,23 @@ module.exports = {
     description: `A stream with the start delimiter overlapping between PES packets.
        Related to https://github.com/video-dev/hls.js/issues/3834, where Apple Silicon chips throw decoding errors if
        NAL units are not starting right at the beginning of the PES packet when using hardware accelerated decoding.`,
+    abr: false,
+    skipFunctionalTests: true,
+  },
+  aes256: {
+    url: 'https://jvaryhlstests.blob.core.windows.net/hlstestdata/playlist_encrypted.m3u8',
+    description: 'aes-256 and aes-256-ctr full segment encryption',
+    abr: false,
+  },
+  mpegTsHevcHls: {
+    url: 'https://devoldemar.github.io/streams/hls/bipbop/hevc.m3u8',
+    description: 'Advanced stream (HEVC Main 10, MPEG-TS segments)',
+    skipFunctionalTests: true,
+  },
+  mpegTsBitmovinHevc: {
+    url: 'https://bitmovin-a.akamaihd.net/content/dataset/multi-codec/hevc/v720p_ts.m3u8',
+    description:
+      'HLS M2TS by Bitmovin (HEVC Main, many NALUs overflowing PESes, video only)',
     abr: false,
     skipFunctionalTests: true,
   },

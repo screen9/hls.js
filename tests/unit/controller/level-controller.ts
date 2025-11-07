@@ -1,39 +1,36 @@
+import chai from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import LevelController from '../../../src/controller/level-controller';
-import HlsMock from '../../mocks/hls.mock';
-import { Events } from '../../../src/events';
 import { ErrorDetails, ErrorTypes } from '../../../src/errors';
+import { Events } from '../../../src/events';
+import { LoadStats } from '../../../src/loader/load-stats';
+import M3U8Parser from '../../../src/loader/m3u8-parser';
 import { Level } from '../../../src/types/level';
+import { PlaylistLevelType } from '../../../src/types/loader';
 import { AttrList } from '../../../src/utils/attr-list';
-import {
-  PlaylistLevelType,
-  PlaylistLoaderContext,
-} from '../../../src/types/loader';
-import M3U8Parser, {
-  ParsedMultivariantPlaylist,
-} from '../../../src/loader/m3u8-parser';
+import { getMediaSource } from '../../../src/utils/mediasource-helper';
+import HlsMock from '../../mocks/hls.mock';
+import { parsedLevel } from '../utils/mock-level';
+import type { Fragment } from '../../../src/loader/fragment';
 import type { LevelDetails } from '../../../src/loader/level-details';
+import type { ParsedMultivariantPlaylist } from '../../../src/loader/m3u8-parser';
 import type {
   ManifestLoadedData,
   ManifestParsedData,
 } from '../../../src/types/events';
-import type { LevelParsed } from '../../../src/types/level';
+import type { PlaylistLoaderContext } from '../../../src/types/loader';
 import type {
   MediaAttributes,
   MediaPlaylist,
   MediaPlaylistType,
 } from '../../../src/types/media-playlist';
-import type { Fragment } from '../../../src/loader/fragment';
-
-import sinon from 'sinon';
-import chai from 'chai';
-import sinonChai from 'sinon-chai';
-import { getMediaSource } from '../../../src/utils/mediasource-helper';
 
 chai.use(sinonChai);
 const expect = chai.expect;
 
 type LevelControllerTestable = Omit<LevelController, 'onManifestLoaded'> & {
-  onManifestLoaded: (event: string, data: Partial<ManifestLoadedData>) => void;
+  onManifestLoaded: (event: string, data: ManifestLoadedData) => void;
   onAudioTrackSwitched: (event: string, data: { id: number }) => void;
   onError: (
     event: string,
@@ -52,18 +49,6 @@ type LevelControllerTestable = Omit<LevelController, 'onManifestLoaded'> & {
   ) => void;
   redundantFailover: (levelIndex: number) => void;
 };
-
-function parsedLevel(
-  options: Partial<LevelParsed> & { bitrate: number },
-): LevelParsed {
-  const level: LevelParsed = {
-    attrs: new AttrList({ BANDWIDTH: options.bitrate }),
-    bitrate: options.bitrate,
-    name: '',
-    url: `${options.bitrate}.m3u8`,
-  };
-  return Object.assign(level, options);
-}
 
 function mediaPlaylist(options: Partial<MediaPlaylist>): MediaPlaylist {
   const track: MediaPlaylist = {
@@ -139,7 +124,7 @@ describe('LevelController', function () {
       contentSteering: null,
       startTimeOffset: null,
       variableList: null,
-      stats: {} as any,
+      stats: new LoadStats(),
       subtitles: [],
       url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
     };
@@ -205,6 +190,12 @@ describe('LevelController', function () {
         networkDetails: '',
         subtitles: [],
         url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+        stats: new LoadStats(),
+        sessionData: null,
+        sessionKeys: null,
+        contentSteering: null,
+        startTimeOffset: null,
+        variableList: null,
       });
 
       return Promise.resolve().then(() => {
@@ -220,6 +211,7 @@ describe('LevelController', function () {
     });
 
     it('emits MANIFEST_PARSED when levels are found in the manifest', function () {
+      const stats = new LoadStats();
       const data: ManifestLoadedData = {
         audioTracks: [],
         levels: [
@@ -255,7 +247,7 @@ describe('LevelController', function () {
         contentSteering: null,
         startTimeOffset: null,
         variableList: null,
-        stats: {} as any,
+        stats,
         url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
       };
 
@@ -268,7 +260,7 @@ describe('LevelController', function () {
         sessionData: null,
         sessionKeys: null,
         firstLevel: 0,
-        stats: {},
+        stats,
         audio: false,
         video: false,
         altAudio: false,
@@ -296,6 +288,15 @@ http://bar.example.com/audio-only/prog_index.m3u8`,
       levelController.onManifestLoaded(Events.MANIFEST_LOADED, {
         levels: parsedLevels,
         audioTracks: [],
+        subtitles: [],
+        networkDetails: new Response('ok'),
+        url: 'https://example.com/prog.m3u8',
+        stats: new LoadStats(),
+        sessionData: null,
+        sessionKeys: null,
+        contentSteering: null,
+        startTimeOffset: null,
+        variableList: null,
       });
       const {
         name,
@@ -320,6 +321,7 @@ http://bar.example.com/audio-only/prog_index.m3u8`,
 
   describe('Manifest Parsed Alt-Audio', function () {
     it('emits MANIFEST_PARSED with `altAudio = true` when there are no codec attributes in MANIFEST_LOADED', function () {
+      const stats = new LoadStats();
       const data: ManifestLoadedData = {
         audioTracks: [
           mediaPlaylist({
@@ -340,7 +342,7 @@ http://bar.example.com/audio-only/prog_index.m3u8`,
         contentSteering: null,
         startTimeOffset: null,
         variableList: null,
-        stats: {} as any,
+        stats,
         url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
       };
 
@@ -351,7 +353,7 @@ http://bar.example.com/audio-only/prog_index.m3u8`,
         sessionData: null,
         sessionKeys: null,
         firstLevel: 0,
-        stats: {} as any,
+        stats,
         audio: false,
         video: false,
         altAudio: true,
@@ -365,6 +367,7 @@ http://bar.example.com/audio-only/prog_index.m3u8`,
     });
 
     it('emits MANIFEST_PARSED with `altAudio = true` when there are codec attributes in MANIFEST_LOADED', function () {
+      const stats = new LoadStats();
       const data: ManifestLoadedData = {
         audioTracks: [
           mediaPlaylist({ audioCodec: 'mp4a.40.5', url: 'audio-track.m3u8' }),
@@ -384,7 +387,7 @@ http://bar.example.com/audio-only/prog_index.m3u8`,
         contentSteering: null,
         startTimeOffset: null,
         variableList: null,
-        stats: {} as any,
+        stats,
         url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
       };
 
@@ -396,7 +399,7 @@ http://bar.example.com/audio-only/prog_index.m3u8`,
         sessionData: null,
         sessionKeys: null,
         firstLevel: 0,
-        stats: {},
+        stats,
         audio: true,
         video: true,
         altAudio: true,
@@ -404,6 +407,7 @@ http://bar.example.com/audio-only/prog_index.m3u8`,
     });
 
     it('emits MANIFEST_PARSED with `altAudio = false` when Variant(s) are audio-only with audio Media Playlists in MANIFEST_LOADED', function () {
+      const stats = new LoadStats();
       const data: ManifestLoadedData = {
         audioTracks: [
           mediaPlaylist({ audioCodec: 'mp4a.40.5', name: 'main' }),
@@ -423,7 +427,7 @@ http://bar.example.com/audio-only/prog_index.m3u8`,
         contentSteering: null,
         startTimeOffset: null,
         variableList: null,
-        stats: {} as any,
+        stats,
         url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
       };
 
@@ -435,7 +439,7 @@ http://bar.example.com/audio-only/prog_index.m3u8`,
         sessionData: null,
         sessionKeys: null,
         firstLevel: 0,
-        stats: {},
+        stats,
         audio: true,
         video: false,
         altAudio: false,
@@ -461,7 +465,7 @@ http://bar.example.com/audio-only/prog_index.m3u8`,
         contentSteering: null,
         startTimeOffset: null,
         variableList: null,
-        stats: {} as any,
+        stats: new LoadStats(),
         url: 'foo',
       };
     });
@@ -680,6 +684,15 @@ http://bar.example.com/md/prog_index.m3u8`,
       levelController.onManifestLoaded(Events.MANIFEST_LOADED, {
         levels: parsedLevels,
         audioTracks: [],
+        subtitles: [],
+        networkDetails: new Response('ok'),
+        url: 'https://example.com/prog.m3u8',
+        stats: new LoadStats(),
+        sessionData: null,
+        sessionKeys: null,
+        contentSteering: null,
+        startTimeOffset: null,
+        variableList: null,
       });
       const {
         name,
@@ -734,7 +747,16 @@ http://bar.example.com/md/prog_index.m3u8`;
       expect(parsedSubs).to.be.undefined;
       levelController.onManifestLoaded(Events.MANIFEST_LOADED, {
         levels: parsedLevels,
-        audioTracks: parsedAudio,
+        audioTracks: parsedAudio!,
+        subtitles: [],
+        networkDetails: new Response('ok'),
+        url: 'https://example.com/prog.m3u8',
+        stats: new LoadStats(),
+        sessionData: null,
+        sessionKeys: null,
+        contentSteering: null,
+        startTimeOffset: null,
+        variableList: null,
       });
       const {
         name,
@@ -790,6 +812,14 @@ http://bar.example.com/md/prog_index.m3u8`;
           levels: parsedLevels,
           audioTracks: parsedAudio,
           subtitles: parsedSubs,
+          networkDetails: new Response('ok'),
+          url: 'https://example.com/prog.m3u8',
+          stats: new LoadStats(),
+          sessionData: null,
+          sessionKeys: null,
+          contentSteering: null,
+          startTimeOffset: null,
+          variableList: null,
         });
         const { name, payload } = hls.getEventData(0) as {
           name: string;
@@ -925,6 +955,14 @@ http://bar.example.com/md/prog_index.m3u8`;
         levels: parsedLevels,
         audioTracks: parsedAudio,
         subtitles: parsedSubs,
+        networkDetails: new Response('ok'),
+        url: 'https://example.com/prog.m3u8',
+        stats: new LoadStats(),
+        sessionData: null,
+        sessionKeys: null,
+        contentSteering: null,
+        startTimeOffset: null,
+        variableList: null,
       });
       const { name, payload } = hls.getEventData(0) as {
         name: string;
@@ -1011,6 +1049,14 @@ http://bar.example.com/md/prog_index.m3u8`;
         levels: parsedLevels,
         audioTracks: parsedAudio,
         subtitles: parsedSubs,
+        networkDetails: new Response('ok'),
+        url: 'https://example.com/prog.m3u8',
+        stats: new LoadStats(),
+        sessionData: null,
+        sessionKeys: null,
+        contentSteering: null,
+        startTimeOffset: null,
+        variableList: null,
       });
       const { name, payload } = hls.getEventData(0) as {
         name: string;

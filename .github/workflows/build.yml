@@ -279,6 +279,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release_npm:
+    # npm oidc is configured for this environment
+    # https://docs.npmjs.com/trusted-publishers#for-github-actions
+    environment: release
     needs: [config, test_unit]
     if: needs.config.outputs.tag || needs.config.outputs.isMainBranch == 'true'
     runs-on: ubuntu-latest
@@ -318,12 +321,15 @@ jobs:
         env:
           CI: true
 
+      # Publishing with OICD needs >= 11.5.1
+      - name: Update npm to v11
+        run: npm install -g npm@11
+
       - name: publish to npm
         run: |
           ./scripts/publish-npm.sh
         env:
           CI: true
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           TAG: ${{ needs.config.outputs.tag }}
 
   test_functional_required:
@@ -377,7 +383,7 @@ jobs:
           name: build
 
       - name: start SauceConnect tunnel
-        uses: saucelabs/sauce-connect-action@270345f214aca56f55c678ca59e626dfd43da153 #v2
+        uses: saucelabs/sauce-connect-action@0ca0e6ce3a5513d6bec2a54044a536c3da3a53fb # v2
         with:
           username: ${{ secrets.SAUCE_USERNAME }}
           accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}
@@ -449,7 +455,7 @@ jobs:
           name: build
 
       - name: start SauceConnect tunnel
-        uses: saucelabs/sauce-connect-action@270345f214aca56f55c678ca59e626dfd43da153 #v2
+        uses: saucelabs/sauce-connect-action@0ca0e6ce3a5513d6bec2a54044a536c3da3a53fb # v2
         with:
           username: ${{ secrets.SAUCE_USERNAME }}
           accessKey: ${{ secrets.SAUCE_ACCESS_KEY }}

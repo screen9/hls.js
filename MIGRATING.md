@@ -4,7 +4,10 @@ The 1.4 version of hls.js now ships with an ESM version of the library (`dist/hl
 
 If you are using the UMD version (`dist/hls.js`), no changes are required.
 
-**Important Note:** If you are using a bundler, such as webpack, the ESM version of the package will likely be used by default. If this is the case, make sure to add the `workerPath` config option after upgrading to hls.js 1.4 or above.
+**Important Notes:**
+
+- If you are using a bundler, such as webpack, the ESM version of the package will likely be used by default. If this is the case, make sure to add the `workerPath` config option after upgrading to hls.js 1.4 or above.
+- Older web engines may experience severe performance degradation when using the ESM version of this package. If targeting older web engines, consider bundling your client application in `loose` mode to avoid additional function overhead. Alternatively, use the UMD/ES5 version of the package.
 
 # Migrating from hls.js 0.x to 1.x
 
@@ -92,5 +95,5 @@ Event order and content have changed in some places. See **Breaking Changes** be
 ### TypeScript
 
 v0.x types are not compatible with v1.x. Type definitions are now exported with the build and npm package in
-`dist/hls.js.d.ts`. Please use these type definitions if you are having trouble with
+`dist/hls.d.ts` and `dist/hls.d.mts`. Please use these type definitions if you are having trouble with
 [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) `@types/hls.js` and v1.x.
