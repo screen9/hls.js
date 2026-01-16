@@ -665,8 +665,12 @@ export default class Hls implements HlsEventEmitter {
     this.detachMedia();
     if (media) {
       this.attachMedia(media);
-      if (time) {
-        this.startLoad(time);
+      if (this.started) {
+        if (time) {
+          this.startLoad(time);
+        } else if (!this.config.autoStartLoad) {
+          this.startLoad();
+        }
       }
     }
   }
