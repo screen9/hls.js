@@ -77,7 +77,7 @@ class CapLevelController implements ComponentAPI {
 
   protected onFpsDropLevelCapping(
     event: Events.FPS_DROP_LEVEL_CAPPING,
-    data: FPSDropLevelCappingData
+    data: FPSDropLevelCappingData,
   ) {
     // Don't add a restricted level more than once
     const level = this.hls.levels[data.droppedLevel];
@@ -92,7 +92,7 @@ class CapLevelController implements ComponentAPI {
 
   protected onMediaAttaching(
     event: Events.MEDIA_ATTACHING,
-    data: MediaAttachingData
+    data: MediaAttachingData,
   ) {
     this.media = data.media instanceof HTMLVideoElement ? data.media : null;
     this.clientRect = null;
@@ -103,7 +103,7 @@ class CapLevelController implements ComponentAPI {
 
   protected onManifestParsed(
     event: Events.MANIFEST_PARSED,
-    data: ManifestParsedData
+    data: ManifestParsedData,
   ) {
     const hls = this.hls;
     this.restrictedLevels = [];
@@ -116,7 +116,7 @@ class CapLevelController implements ComponentAPI {
 
   private onLevelsUpdated(
     event: Events.LEVELS_UPDATED,
-    data: LevelsUpdatedData
+    data: LevelsUpdatedData,
   ) {
     if (this.timer && Number.isFinite(this.autoLevelCapping)) {
       this.detectPlayerSize();
@@ -127,7 +127,7 @@ class CapLevelController implements ComponentAPI {
   // to the first level
   protected onBufferCodecs(
     event: Events.BUFFER_CODECS,
-    data: BufferCodecsData
+    data: BufferCodecsData,
   ) {
     const hls = this.hls;
     if (hls.config.capLevelToPlayerSize && data.video) {
@@ -181,14 +181,14 @@ class CapLevelController implements ComponentAPI {
     }
 
     const validLevels = levels.filter(
-      (level, index) => this.isLevelAllowed(level) && index <= capLevelIndex
+      (level, index) => this.isLevelAllowed(level) && index <= capLevelIndex,
     );
 
     this.clientRect = null;
     return CapLevelController.getMaxLevelByMediaSize(
       validLevels,
       this.mediaWidth,
-      this.mediaHeight
+      this.mediaHeight,
     );
   }
 
@@ -250,13 +250,12 @@ class CapLevelController implements ComponentAPI {
 
   get contentScaleFactor(): number {
     let pixelRatio = 1;
-    try {
-      pixelRatio = Math.max(
-        self.devicePixelRatio,
-        this.hls.config.minDevicePixelRatio
-      );
-    } catch (e) {
-      /* no-op */
+    if (!this.hls.config.ignoreDevicePixelRatio) {
+      try {
+        pixelRatio = self.devicePixelRatio;
+      } catch (e) {
+        /* no-op */
+      }
     }
 
     return Math.min(pixelRatio, this.hls.config.maxDevicePixelRatio);
@@ -276,7 +275,7 @@ class CapLevelController implements ComponentAPI {
   static getMaxLevelByMediaSize(
     levels: Array<Level>,
     width: number,
-    height: number
+    height: number,
   ): number {
     if (!levels?.length) {
       return -1;
@@ -286,7 +285,7 @@ class CapLevelController implements ComponentAPI {
     // to determine whether we've chosen the greatest bandwidth for the media's dimensions
     const atGreatestBandwidth = (
       curLevel: Level,
-      nextLevel: Level | undefined
+      nextLevel: Level | undefined,
     ) => {
       if (!nextLevel) {
         return true;

@@ -820,6 +820,39 @@ export default class BaseStreamController
     frag: PartsLoadedData | FragLoadedData,
   ) {}
 
+  private loadKeyFor(
+    frag: Fragment,
+    details: LevelDetails,
+  ): Promise<KeyLoadedData | void> | null {
+    let keyLoadingPromise: Promise<KeyLoadedData | void> | null = null;
+    if (frag.encrypted && !frag.decryptdata?.key) {
+      this.log(
+        `Loading key for ${frag.sn} of [${details.startSN}-${details.endSN}], ${this.playlistLabel()} ${frag.level}`,
+      );
+      this.state = State.KEY_LOADING;
+      keyLoadingPromise = this.keyLoader.load(frag).then((keyLoadedData) => {
+        if (!this.fragContextChanged(keyLoadedData.frag)) {
+          this.hls.trigger(Events.KEY_LOADED, keyLoadedData);
+          if (this.state === State.KEY_LOADING) {
+            this.state = State.IDLE;
+          }
+          return keyLoadedData;
+        }
+      });
+      this.hls.trigger(Events.KEY_LOADING, { frag });
+    } else if (!frag.encrypted) {
+      keyLoadingPromise = this.keyLoader.loadClear(
+        frag,
+        details.encryptedFragments,
+        this.startFragRequested,
+      );
+      if (keyLoadingPromise) {
+        this.log(`[eme] blocking frag load until media-keys acquired`);
+      }
+    }
+    return keyLoadingPromise;
+  }
+
   protected _doFragLoad(
     frag: Fragment,
     level: Level,
@@ -832,38 +865,6 @@ export default class BaseStreamController
       throw new Error(
         `frag load aborted, missing level${details ? '' : ' detail'}s`,
       );
-    }
-
-    let keyLoadingPromise: Promise<KeyLoadedData | void> | null = null;
-    if (frag.encrypted && !frag.decryptdata?.key) {
-      this.log(
-        `Loading key for ${frag.sn} of [${details.startSN}-${details.endSN}], ${this.playlistLabel()} ${frag.level}`,
-      );
-      this.state = State.KEY_LOADING;
-      this.fragCurrent = frag;
-      keyLoadingPromise = this.keyLoader.load(frag).then((keyLoadedData) => {
-        if (!this.fragContextChanged(keyLoadedData.frag)) {
-          this.hls.trigger(Events.KEY_LOADED, keyLoadedData);
-          if (this.state === State.KEY_LOADING) {
-            this.state = State.IDLE;
-          }
-          return keyLoadedData;
-        }
-      });
-      this.hls.trigger(Events.KEY_LOADING, { frag });
-      if ((this.fragCurrent as Fragment | null) === null) {
-        this.log(`context changed in KEY_LOADING`);
-        return Promise.resolve(null);
-      }
-    } else if (!frag.encrypted) {
-      keyLoadingPromise = this.keyLoader.loadClear(
-        frag,
-        details.encryptedFragments,
-        this.startFragRequested,
-      );
-      if (keyLoadingPromise) {
-        this.log(`[eme] blocking frag load until media-keys acquired`);
-      }
     }
 
     const fragPrevious = this.fragPrevious;
@@ -892,6 +893,10 @@ export default class BaseStreamController
         if (partIndex > -1) {
           const part = partList[partIndex];
           frag = this.fragCurrent = part.fragment;
+          const keyLoadingPromise = this.loadKeyFor(frag, details);
+          if (this.fragContextChanged(frag)) {
+            return Promise.resolve(null);
+          }
           this.log(
             `Loading ${frag.type} sn: ${frag.sn} part: ${part.index} (${partIndex}/${partList.length - 1}) of ${this.fragInfo(frag, false, part)}) cc: ${
               frag.cc
@@ -962,6 +967,14 @@ export default class BaseStreamController
       return Promise.resolve(null);
     }
 
+    const keyLoadingPromise = this.loadKeyFor(frag, details);
+    if (this.fragContextChanged(frag)) {
+      this.log(
+        `Context changed in KEY_LOADING sn: ${frag.sn} ${frag.relurl} > ${this.fragCurrent?.relurl}`,
+      );
+      keyLoadingPromise?.catch(() => null);
+      return Promise.resolve(null);
+    }
     this.log(
       `Loading ${frag.type} sn: ${frag.sn} of ${this.fragInfo(frag, false)}) cc: ${frag.cc} ${
         '[' + details.startSN + '-' + details.endSN + ']'
@@ -1295,6 +1308,28 @@ export default class BaseStreamController
     return Math.min(maxBufLen, config.maxMaxBufferLength);
   }
 
+  protected exceedsMaxBuffer(
+    bufferInfo: BufferInfo,
+    maxBufLen: number,
+    selected: Fragment,
+  ): boolean {
+    const nextStart = bufferInfo.nextStart;
+    if (nextStart && selected.start > nextStart) {
+      const bufferedRanges = bufferInfo.buffered;
+      if (bufferedRanges) {
+        let fullBufferLength = bufferInfo.len;
+        const bufferedIndex = bufferInfo.bufferedIndex;
+        for (let i = bufferedRanges.length - 1; i > bufferedIndex; i--) {
+          if (bufferedRanges[i].start < selected.start) {
+            fullBufferLength += bufferedRanges[i].end - bufferedRanges[i].start;
+          }
+        }
+        return fullBufferLength >= maxBufLen;
+      }
+    }
+    return false;
+  }
+
   protected reduceMaxBufferLength(threshold: number, fragDuration: number) {
     const config = this.config;
     const minLength = Math.max(
@@ -1341,7 +1376,7 @@ export default class BaseStreamController
 
     // find fragment index, contiguous with end of buffer position
     const { config } = this;
-    const start = fragments[0].start;
+    const playlistStart = levelDetails.fragmentStart;
     const canLoadParts = config.lowLatencyMode && !!levelDetails.partList;
     let frag: MediaFragment | null = null;
 
@@ -1361,26 +1396,49 @@ export default class BaseStreamController
         (!levelDetails.PTSKnown &&
           !this.startFragRequested &&
           this.startPosition === -1) ||
-        pos < start
+        pos < playlistStart
       ) {
         if (canLoadParts && !this.loadingParts) {
           this.log(`LL-Part loading ON for initial live fragment`);
           this.loadingParts = true;
         }
         frag = this.getInitialLiveFragment(levelDetails);
+        const configValue = this.config.startPosition;
         const mainStart = this.hls.startPosition;
         const liveSyncPosition = this.hls.liveSyncPosition;
-        const startPosition = frag
-          ? (mainStart !== -1 && mainStart >= start
-              ? mainStart
-              : liveSyncPosition) || frag.start
-          : pos;
-        this.log(
-          `Setting startPosition to ${startPosition} to match start frag at live edge. mainStart: ${mainStart} liveSyncPosition: ${liveSyncPosition} frag.start: ${frag?.start}`,
-        );
-        this.startPosition = this.nextLoadPosition = startPosition;
+        const fragStart = frag?.start || 0;
+
+        let startPosition: number | undefined;
+        let reason: string | undefined;
+        if (mainStart !== -1 && mainStart >= playlistStart) {
+          startPosition = mainStart;
+          reason = mainStart === configValue ? 'config' : 'next load start';
+        } else if (liveSyncPosition !== null) {
+          startPosition = liveSyncPosition;
+          reason = 'live edge';
+        } else {
+          startPosition = pos;
+          reason = 'buffer pos';
+        }
+        if (startPosition < fragStart) {
+          startPosition = fragStart;
+          reason = 'live frag start';
+        }
+        if (startPosition < playlistStart) {
+          startPosition = playlistStart;
+          reason = 'playlist start';
+        }
+        if (
+          this.startPosition != startPosition ||
+          this.nextLoadPosition != startPosition
+        ) {
+          this.log(
+            `Setting startPosition to ${startPosition.toFixed(3)} ${mainStart === -1 ? '' : `(from ${configValue}) `}based on ${reason}. live edge: ${liveSyncPosition} live frag start: ${fragStart.toFixed(3)} playlist start: ${playlistStart.toFixed(3)} buffer pos: ${pos}`,
+          );
+          this.startPosition = this.nextLoadPosition = startPosition;
+        }
       }
-    } else if (pos <= start) {
+    } else if (pos <= playlistStart) {
       // VoD playlist: if loadPosition before start of playlist, load first fragment
       frag = fragments[0];
     }
@@ -1404,11 +1462,13 @@ export default class BaseStreamController
   }
 
   protected isLoopLoading(frag: Fragment, targetBufferTime: number): boolean {
+    if (this.nextLoadPosition <= targetBufferTime) {
+      return false;
+    }
     const trackerState = this.fragmentTracker.getState(frag);
     return (
-      (trackerState === FragmentState.OK ||
-        (trackerState === FragmentState.PARTIAL && !!frag.gap)) &&
-      this.nextLoadPosition > targetBufferTime
+      trackerState === FragmentState.OK ||
+      (trackerState === FragmentState.PARTIAL && !!frag.gap)
     );
   }
 
@@ -1596,14 +1656,16 @@ export default class BaseStreamController
     if (fragPrevious) {
       if (levelDetails.hasProgramDateTime) {
         // Prefer using PDT, because it can be accurate enough to choose the correct fragment without knowing the level sliding
-        this.log(
-          `Live playlist, switching playlist, load frag with same PDT: ${fragPrevious.programDateTime}`,
-        );
         frag = findFragmentByPDT(
           fragments,
           fragPrevious.endProgramDateTime,
           this.config.maxFragLookUpTolerance,
         );
+        if (frag) {
+          this.log(
+            `Live playlist, switching playlist, load frag with same PDT: ${fragPrevious.programDateTime}`,
+          );
+        }
       }
       if (!frag) {
         // SN does not need to be accurate between renditions, but depending on the packaging it may be so.

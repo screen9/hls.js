@@ -22,8 +22,6 @@ import {
   keySystemDomainToKeySystemFormat,
   keySystemFormatToKeySystemDomain,
   KeySystems,
-  keySystemDomainToKeySystemFormat as keySystemToKeySystemFormat,
-  parsePlayReadyWRM,
   requestMediaKeySystemAccess,
 } from '../utils/mediakeys-helper';
 import { bin2str, parseSinf } from '../utils/mp4-tools';

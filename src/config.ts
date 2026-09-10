@@ -92,7 +92,7 @@ export type DRMSystemConfiguration = {
     this: Hls,
     initDataType: string,
     initData: ArrayBuffer | null,
-    keyContext: MediaKeySessionContext
+    keyContext: MediaKeySessionContext,
   ) =>
     | { initDataType: string; initData: ArrayBuffer | null }
     | undefined
@@ -109,13 +109,13 @@ export type EMEControllerConfig = {
     xhr: XMLHttpRequest,
     url: string,
     keyContext: MediaKeySessionContext,
-    licenseChallenge: Uint8Array
+    licenseChallenge: Uint8Array,
   ) => void | Uint8Array | Promise<Uint8Array | void>;
   licenseResponseCallback?: (
     this: Hls,
     xhr: XMLHttpRequest,
     url: string,
-    keyContext: MediaKeySessionContext
+    keyContext: MediaKeySessionContext,
   ) => ArrayBuffer;
   emeEnabled: boolean;
   widevineLicenseUrl?: string;
@@ -204,7 +204,7 @@ export type RetryConfig = {
     retryCount: number,
     isTimeout: boolean,
     loaderResponse: LoaderResponse | undefined,
-    retry: boolean
+    retry: boolean,
   ) => boolean;
 };
 
@@ -282,8 +282,8 @@ export type HlsConfig = {
   minAutoBitrate: number;
   ignoreDevicePixelRatio: boolean;
   maxDevicePixelRatio: number;
-  preferManagedMediaSource: boolean;
   minDevicePixelRatio: number;
+  preferManagedMediaSource: boolean;
   preserveManualLevelOnError: boolean;
   timelineOffset?: number;
   ignorePlaylistParsingErrors: boolean;
@@ -371,8 +371,8 @@ export const hlsDefaultConfig: HlsConfig = {
   capLevelToPlayerSize: false, // used by cap-level-controller
   ignoreDevicePixelRatio: false, // used by cap-level-controller
   maxDevicePixelRatio: Number.POSITIVE_INFINITY, // used by cap-level-controller
-  preferManagedMediaSource: true,
-  minDevicePixelRatio: 1,
+  minDevicePixelRatio: 1, // consumed by the Amber cap-level-controller override
+  preferManagedMediaSource: false,
   initialLiveManifestSize: 1, // used by stream-controller
   maxBufferLength: 30, // used by stream-controller
   backBufferLength: Infinity, // used by buffer-controller
@@ -631,7 +631,7 @@ export function mergeConfig(
     (userConfig.liveSyncDuration || userConfig.liveMaxLatencyDuration)
   ) {
     throw new Error(
-      "Illegal hls.js config: don't mix up liveSyncDurationCount/liveMaxLatencyDurationCount and liveSyncDuration/liveMaxLatencyDuration"
+      "Illegal hls.js config: don't mix up liveSyncDurationCount/liveMaxLatencyDurationCount and liveSyncDuration/liveMaxLatencyDuration",
     );
   }
 
@@ -642,7 +642,7 @@ export function mergeConfig(
         userConfig.liveSyncDurationCount)
   ) {
     throw new Error(
-      'Illegal hls.js config: "liveMaxLatencyDurationCount" must be greater than "liveSyncDurationCount"'
+      'Illegal hls.js config: "liveMaxLatencyDurationCount" must be greater than "liveSyncDurationCount"',
     );
   }
 
@@ -652,7 +652,7 @@ export function mergeConfig(
       userConfig.liveMaxLatencyDuration <= userConfig.liveSyncDuration)
   ) {
     throw new Error(
-      'Illegal hls.js config: "liveMaxLatencyDuration" must be greater than "liveSyncDuration"'
+      'Illegal hls.js config: "liveMaxLatencyDuration" must be greater than "liveSyncDuration"',
     );
   }
 
@@ -735,7 +735,7 @@ export function enableStreamingMode(config: HlsConfig, logger: ILogger) {
   if (currentLoader !== FetchLoader && currentLoader !== XhrLoader) {
     // If a developer has configured their own loader, respect that choice
     logger.log(
-      '[config]: Custom loader detected, cannot enable progressive streaming'
+      '[config]: Custom loader detected, cannot enable progressive streaming',
     );
     config.progressive = false;
   } else {
