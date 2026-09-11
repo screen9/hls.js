@@ -512,8 +512,6 @@ export class BaseStreamController extends TaskLoop implements NetworkComponentAP
     // (undocumented)
     pauseBuffering(): void;
     // (undocumented)
-    pauseBuffering(): void;
-    // (undocumented)
     protected playlistType: PlaylistLevelType;
     // (undocumented)
     protected get primaryPrefetch(): boolean;
@@ -537,8 +535,6 @@ export class BaseStreamController extends TaskLoop implements NetworkComponentAP
     protected resetTransmuxer(): void;
     // (undocumented)
     protected resetWhenMissingContext(chunkMeta: ChunkMetadata | Fragment): void;
-    // (undocumented)
-    resumeBuffering(): void;
     // (undocumented)
     resumeBuffering(): void;
     // (undocumented)
@@ -2266,8 +2262,8 @@ export type HlsConfig = {
     minAutoBitrate: number;
     ignoreDevicePixelRatio: boolean;
     maxDevicePixelRatio: number;
-    preferManagedMediaSource: boolean;
     minDevicePixelRatio: number;
+    preferManagedMediaSource: boolean;
     preserveManualLevelOnError: boolean;
     timelineOffset?: number;
     ignorePlaylistParsingErrors: boolean;
