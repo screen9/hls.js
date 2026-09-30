@@ -2,10 +2,14 @@ import chai from 'chai';
 import EventEmitter from 'eventemitter3';
 import sinonChai from 'sinon-chai';
 import { hlsDefaultConfig } from '../../../src/config';
+import MP4 from '../../../src/remux/mp4-generator';
 import MP4Remuxer from '../../../src/remux/mp4-remuxer';
 import { logger } from '../../../src/utils/logger';
 import type { HlsEventEmitter } from '../../../src/events';
-import type { VideoSample } from '../../../src/types/demuxer';
+import type {
+  DemuxedVideoTrack,
+  VideoSample,
+} from '../../../src/types/demuxer';
 import type { TypeSupported } from '../../../src/utils/codecs';
 
 chai.use(sinonChai);
@@ -102,6 +106,108 @@ describe('mp4-remuxer', function () {
       'audio',
     );
     expect(result).to.be.gt(0);
+  });
+
+  describe('video start gap', function () {
+    // initPTS at 1.4 s, first frame decoded at 1.4 s and presented two frames later (B-frames at 30 fps)
+    const initTime = 126000;
+
+    before(function () {
+      // Normally initialized by the init segment, which is generated before the first moof
+      MP4.init();
+    });
+
+    function createRemuxer(): MP4Remuxer {
+      const observer: HlsEventEmitter = new EventEmitter() as HlsEventEmitter;
+      const remuxer = new MP4Remuxer(
+        observer,
+        { ...hlsDefaultConfig },
+        { mpeg: true, mp3: true, ac3: true },
+        logger,
+      );
+      (remuxer as any)._initPTS = { baseTime: initTime, timescale: 90000 };
+      return remuxer;
+    }
+
+    function createVideoTrack(samples: VideoSample[]): DemuxedVideoTrack {
+      return {
+        type: 'video',
+        id: 1,
+        pid: 256,
+        inputTimeScale: 90000,
+        sequenceNumber: 0,
+        dropped: 0,
+        segmentCodec: 'avc',
+        pixelRatio: [1, 1],
+        width: 640,
+        height: 480,
+        samples,
+      };
+    }
+
+    function remuxStart(samples: VideoSample[], timeOffset = 0) {
+      const remuxer = createRemuxer();
+      const result = remuxer.remuxVideo(
+        createVideoTrack(samples),
+        timeOffset,
+        false,
+        0,
+      );
+      remuxer.destroy();
+      return result;
+    }
+
+    // I P B B in decode order, the I frame is presented first
+    const closedGop = (): VideoSample[] => [
+      ptsDts(initTime + 6000, initTime),
+      ptsDts(initTime + 15000, initTime + 3000),
+      ptsDts(initTime + 9000, initTime + 6000),
+      ptsDts(initTime + 12000, initTime + 9000),
+    ];
+
+    it('presents the first frame from the playlist start', function () {
+      const result = remuxStart(closedGop());
+      expect(result?.startPTS).to.eq(0);
+      expect(result?.startDTS).to.eq(0);
+      expect(result?.nb).to.eq(4);
+    });
+
+    it('decodes the first frame from the playlist start when audio starts before the first video DTS', function () {
+      // initPTS is bound to the audio start; the video is decoded 30 ms and presented 90 ms later
+      const result = remuxStart([
+        ptsDts(initTime + 8100, initTime + 2700),
+        ptsDts(initTime + 17100, initTime + 5700),
+        ptsDts(initTime + 11100, initTime + 8700),
+        ptsDts(initTime + 14100, initTime + 11700),
+      ]);
+      expect(result?.startPTS).to.eq(0);
+      expect(result?.startDTS).to.eq(0);
+      expect(result?.nb).to.eq(4);
+    });
+
+    it('does not fill gaps of segments remuxed after the playlist start', function () {
+      const result = remuxStart(closedGop(), 10);
+      expect(result?.startPTS).to.be.closeTo(6000 / 90000, 1e-9);
+    });
+
+    it('does not fill gaps larger than maxBufferHole', function () {
+      const samples = closedGop();
+      // first frame presented 0.2 s after the playlist start
+      samples.forEach((sample) => (sample.pts += 12000));
+      const result = remuxStart(samples);
+      expect(result?.startPTS).to.be.closeTo(18000 / 90000, 1e-9);
+    });
+
+    it('keeps the presentation order when a leading picture is presented before the first frame', function () {
+      // Open GOP: the B frame decoded after the I frame is presented before it
+      const result = remuxStart([
+        ptsDts(initTime + 6000, initTime),
+        ptsDts(initTime + 3000, initTime + 3000),
+        ptsDts(initTime + 15000, initTime + 6000),
+        ptsDts(initTime + 9000, initTime + 9000),
+      ]);
+      expect(result?.startPTS).to.be.closeTo(3000 / 90000, 1e-9);
+    });
   });
 });
 

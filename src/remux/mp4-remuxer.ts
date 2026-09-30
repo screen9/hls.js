@@ -600,6 +600,37 @@ export default class MP4Remuxer extends Logger implements Remuxer {
       ? Math.round(inputDuration / (nbSamples - 1))
       : mp4SampleDuration || track.inputTimeScale / 30;
 
+    // The video buffer can start slightly after the playlist start, so that playback can only begin by
+    // seeking over that hole: B-frames delay the presentation of the first frame by its composition offset,
+    // and audio may start before the first video DTS (initPTS is bound to the lowest timestamp across
+    // tracks). Decode and present the first frame from the playlist start instead (it lasts longer).
+    if (!contiguous && timeOffset === 0) {
+      const firstSample = inputSamples[0];
+      // With a timeOffset of 0 the playlist start is initTime
+      const startGap = firstSample.pts - initTime;
+      if (startGap > 0 && startGap < this.config.maxBufferHole * timeScale) {
+        // Only when the first decoded frame is also the first presented one (not with leading pictures of
+        // an open GOP), so that presenting it earlier cannot change the presentation order
+        const presentedFirst = inputSamples.every(
+          (sample, i) => i === 0 || sample.pts > firstSample.pts,
+        );
+        if (presentedFirst) {
+          this.log(
+            `Video: ${toMsFromMpegTsClock(
+              startGap,
+              true,
+            )} ms start gap filled by decoding and presenting the first frame earlier`,
+          );
+          firstSample.pts = initTime;
+          // PTS may not precede DTS (composition offsets are unsigned); the first sample in decode order
+          // can move back without affecting the others
+          if (firstSample.dts > initTime) {
+            firstSample.dts = firstDTS = initTime;
+          }
+        }
+      }
+    }
+
     // if fragment are contiguous, detect hole/overlapping between fragments
     if (contiguous) {
       // check timestamp continuity across consecutive fragments (this is to remove inter-fragment gap/hole)
